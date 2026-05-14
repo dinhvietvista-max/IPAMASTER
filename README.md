@@ -1,3402 +1,842 @@
 <!DOCTYPE html>
-<html lang="vi" data-theme="light">
+<html lang="vi">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Vista IPA & Pronunciation Trainer - Bảng IPA, lý thuyết ngữ âm và luyện bài phát âm/trọng âm theo cấu trúc thi vào 10 THPT." />
-  <title>Vista IPA & Pronunciation Trainer</title>
+  <title>Vista IPA Learning App</title>
   <style>
     :root {
-      --orange:#f97316;
-      --orange2:#fb923c;
-      --dark:#0f172a;
-      --text:#1e293b;
-      --muted:#64748b;
-      --card:rgba(255,255,255,.95);
-      --soft:#f8fafc;
-      --border:#e2e8f0;
-      --green:#16a34a;
-      --greenSoft:#dcfce7;
-      --red:#dc2626;
-      --redSoft:#fee2e2;
-      --yellow:#f59e0b;
-      --shadow:0 18px 45px rgba(15,23,42,.10);
+      --orange: #f97316;
+      --orange-dark: #ea580c;
+      --blue: #0f172a;
+      --soft: #fff7ed;
+      --light: #f8fafc;
+      --border: #e2e8f0;
+      --text: #1e293b;
+      --muted: #64748b;
+      --green: #16a34a;
+      --red: #dc2626;
+      --shadow: 0 18px 45px rgba(15, 23, 42, 0.12);
     }
 
-    [data-theme="dark"] {
-      --dark:#f8fafc;
-      --text:#e2e8f0;
-      --muted:#94a3b8;
-      --card:rgba(15,23,42,.95);
-      --soft:#111827;
-      --border:#334155;
-      --shadow:0 18px 45px rgba(0,0,0,.32);
+    * {
+      box-sizing: border-box;
     }
-
-    * { box-sizing:border-box; }
 
     body {
-      margin:0;
-      font-family:Arial, Helvetica, sans-serif;
-      color:var(--text);
-      min-height:100vh;
-      background:
-        radial-gradient(circle at top left,rgba(249,115,22,.16),transparent 34%),
-        radial-gradient(circle at 90% 5%,rgba(59,130,246,.10),transparent 28%),
-        linear-gradient(135deg,#fff7ed 0%,#fff 45%,#eff6ff 100%);
-    }
-
-    [data-theme="dark"] body {
-      background:
-        radial-gradient(circle at top left,rgba(249,115,22,.16),transparent 34%),
-        radial-gradient(circle at 90% 5%,rgba(59,130,246,.12),transparent 28%),
-        linear-gradient(135deg,#020617,#0f172a 55%,#111827);
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: linear-gradient(135deg, #fff7ed 0%, #ffffff 42%, #eff6ff 100%);
+      color: var(--text);
+      min-height: 100vh;
     }
 
     header {
-      padding:14px 18px;
-      background:var(--card);
-      border-bottom:1px solid var(--border);
-      backdrop-filter:blur(14px);
-      position:relative;
-      z-index:10;
+      padding: 28px 18px 20px;
+      background: radial-gradient(circle at top left, rgba(249, 115, 22, 0.18), transparent 38%), #ffffffcc;
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 20;
     }
 
     .header-inner {
-      max-width:1240px;
-      margin:auto;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:16px;
-      flex-wrap:wrap;
+      max-width: 1180px;
+      margin: auto;
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 20px;
+      align-items: center;
     }
 
     .brand {
-      display:flex;
-      align-items:center;
-      gap:12px;
-      min-width:0;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 8px;
     }
 
     .logo {
-      width:46px;
-      height:46px;
-      border-radius:17px;
-      background:linear-gradient(135deg,var(--orange),var(--orange2));
-      color:#fff;
-      display:grid;
-      place-items:center;
-      font-weight:900;
-      font-size:22px;
-      box-shadow:0 10px 25px rgba(249,115,22,.25);
-      flex:none;
+      width: 46px;
+      height: 46px;
+      display: grid;
+      place-items: center;
+      border-radius: 16px;
+      background: linear-gradient(135deg, var(--orange), #fb923c);
+      color: white;
+      font-weight: 900;
+      font-size: 22px;
+      box-shadow: 0 10px 24px rgba(249, 115, 22, 0.28);
     }
 
     h1 {
-      margin:0;
-      color:var(--dark);
-      font-size:clamp(22px,3vw,34px);
-      line-height:1.1;
-      letter-spacing:-.7px;
+      margin: 0;
+      font-size: clamp(28px, 4vw, 48px);
+      letter-spacing: -1px;
+      color: var(--blue);
+      line-height: 1.06;
     }
 
     .subtitle {
-      margin:4px 0 0;
-      color:var(--muted);
-      font-size:14px;
-      line-height:1.4;
+      margin: 12px 0 0;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.55;
+      max-width: 760px;
     }
 
-    button, select, input { font-family:inherit; }
-
-    button {
-      border:0;
-      cursor:pointer;
-      border-radius:999px;
-      padding:10px 14px;
-      font-weight:900;
-      font-size:14px;
-      transition:.18s ease;
-      user-select:none;
+    .hero-card {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      padding: 22px;
+      box-shadow: var(--shadow);
     }
 
-    button:hover { filter:brightness(.98); transform:translateY(-1px); }
-    button:active { transform:scale(.98); }
-    button:disabled { opacity:.74; cursor:not-allowed; }
-
-    .primary {
-      background:linear-gradient(135deg,var(--orange),var(--orange2));
-      color:#fff;
-      box-shadow:0 10px 24px rgba(249,115,22,.22);
-    }
-
-    .secondary {
-      background:var(--soft);
-      color:var(--text);
-      border:1px solid var(--border);
-    }
-
-    .danger {
-      background:var(--redSoft);
-      color:#991b1b;
-      border:1px solid #fecaca;
-    }
-
-    main {
-      max-width:1240px;
-      margin:16px auto 56px;
-      padding:0 18px;
+    .hero-card strong {
+      color: var(--orange-dark);
     }
 
     .stats {
-      display:grid;
-      grid-template-columns:repeat(4,1fr);
-      gap:12px;
-      margin-bottom:14px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 16px;
     }
 
     .stat {
-      background:var(--card);
-      border:1px solid var(--border);
-      border-radius:22px;
-      padding:14px;
-      box-shadow:0 10px 28px rgba(15,23,42,.06);
+      background: var(--soft);
+      border: 1px solid #fed7aa;
+      border-radius: 18px;
+      padding: 12px;
+      text-align: center;
     }
 
     .stat b {
-      display:block;
-      color:var(--orange);
-      font-size:24px;
-      line-height:1;
-      margin-bottom:5px;
+      display: block;
+      font-size: 22px;
+      color: var(--orange-dark);
     }
 
     .stat span {
-      font-size:13px;
-      color:var(--muted);
+      font-size: 12px;
+      color: var(--muted);
     }
 
-    .tabs {
-      display:flex;
-      gap:8px;
-      flex-wrap:wrap;
-      margin-bottom:14px;
+    main {
+      max-width: 1180px;
+      margin: 24px auto 60px;
+      padding: 0 18px;
     }
 
-    .tab {
-      background:var(--card);
-      border:1px solid var(--border);
-      color:var(--text);
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 18px;
     }
 
-    .tab.active {
-      background:var(--orange);
-      border-color:var(--orange);
-      color:white;
+    .tabs, .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
     }
 
-    .layout {
-      display:grid;
-      grid-template-columns:320px 1fr;
-      gap:16px;
-      align-items:start;
+    button, .filter-btn {
+      border: 0;
+      cursor: pointer;
+      font-weight: 700;
+      border-radius: 999px;
+      padding: 11px 16px;
+      transition: 0.2s ease;
+      font-size: 14px;
     }
 
-    .panel, .card {
-      background:var(--card);
-      border:1px solid var(--border);
-      border-radius:28px;
-      box-shadow:var(--shadow);
+    .tab-btn {
+      background: white;
+      color: var(--blue);
+      border: 1px solid var(--border);
+    }
+
+    .tab-btn.active, .filter-btn.active {
+      background: var(--orange);
+      color: white;
+      box-shadow: 0 8px 20px rgba(249, 115, 22, 0.25);
+    }
+
+    .filter-btn {
+      background: #f1f5f9;
+      color: var(--blue);
+      border: 1px solid var(--border);
+    }
+
+    .search-box {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 8px 14px;
+      min-width: min(100%, 310px);
+      box-shadow: 0 8px 25px rgba(15, 23, 42, 0.05);
+    }
+
+    .search-box input {
+      border: 0;
+      outline: 0;
+      width: 100%;
+      font-size: 15px;
     }
 
     .panel {
-      padding:16px;
-      position:sticky;
-      top:16px;
+      display: none;
     }
 
-    .card { padding:20px; }
-
-    .panel h2, .card h2 {
-      margin:0 0 14px;
-      color:var(--dark);
-      font-size:20px;
-    }
-
-    .field {
-      display:block;
-      margin:13px 0 7px;
-      font-size:13px;
-      font-weight:900;
-      color:var(--dark);
-    }
-
-    select, input {
-      width:100%;
-      border:1px solid var(--border);
-      background:var(--soft);
-      color:var(--text);
-      border-radius:15px;
-      padding:11px 12px;
-      outline:none;
-      font-size:14px;
-    }
-
-    select:focus, input:focus {
-      border-color:#fdba74;
-      box-shadow:0 0 0 4px rgba(249,115,22,.14);
-    }
-
-    .btn-grid {
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:9px;
-      margin-top:13px;
-    }
-
-    .score-box {
-      margin-top:14px;
-      display:grid;
-      grid-template-columns:repeat(3,1fr);
-      gap:8px;
-    }
-
-    .score {
-      border:1px solid var(--border);
-      background:var(--soft);
-      border-radius:16px;
-      padding:10px 6px;
-      text-align:center;
-    }
-
-    .score b {
-      display:block;
-      color:var(--orange);
-      font-size:20px;
-    }
-
-    .score span {
-      font-size:12px;
-      color:var(--muted);
-    }
-
-    .mini-note {
-      margin:12px 0 0;
-      color:var(--muted);
-      font-size:13px;
-      line-height:1.5;
-    }
-
-    .view { display:none; }
-
-    .view.active {
-      display:block;
-      animation:fadeIn .22s ease;
+    .panel.active {
+      display: block;
+      animation: fadeIn 0.25s ease;
     }
 
     @keyframes fadeIn {
-      from { opacity:0; transform:translateY(8px); }
-      to { opacity:1; transform:translateY(0); }
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .ipa-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+      gap: 14px;
+    }
+
+    .sound-card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 18px;
+      box-shadow: 0 12px 30px rgba(15, 23, 42, 0.06);
+      transition: 0.22s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .sound-card::after {
+      content: "";
+      position: absolute;
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      background: rgba(249, 115, 22, 0.08);
+      right: -32px;
+      top: -32px;
+    }
+
+    .sound-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow);
+      border-color: #fdba74;
+    }
+
+    .symbol {
+      font-size: 42px;
+      font-weight: 900;
+      color: var(--orange-dark);
+      line-height: 1;
+    }
+
+    .label {
+      margin: 8px 0 6px;
+      font-weight: 800;
+      color: var(--blue);
+    }
+
+    .sound-line {
+      margin: 8px 0;
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 10px;
+      font-size: 14px;
+      line-height: 1.45;
+    }
+
+    .sound-line b {
+      color: var(--orange-dark);
+    }
+
+    .example {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.45;
+    }
+
+    .practice-words {
+      margin-top: 10px;
+      background: #fff7ed;
+      border: 1px solid #fed7aa;
+      border-radius: 16px;
+      padding: 10px;
+      font-size: 13px;
+      line-height: 1.5;
+      color: #7c2d12;
+    }
+
+    .practice-words b {
+      color: var(--orange-dark);
+    }
+
+    .tag {
+      display: inline-block;
+      margin-top: 10px;
+      background: #f1f5f9;
+      color: #475569;
+      border-radius: 999px;
+      padding: 5px 9px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .btn-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .speak-btn {
+      background: var(--blue);
+      color: white;
+      width: 100%;
+      padding-left: 8px;
+      padding-right: 8px;
+      font-size: 13px;
+    }
+
+    .ipa-btn {
+      background: var(--orange);
+      color: white;
+      width: 100%;
+      padding-left: 8px;
+      padding-right: 8px;
+      font-size: 13px;
+    }
+
+    .speak-btn:hover {
+      background: #020617;
+    }
+
+    .ipa-btn:hover {
+      background: var(--orange-dark);
     }
 
     .section-title {
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:12px;
-      flex-wrap:wrap;
-      margin-bottom:14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin: 30px 0 16px;
     }
 
-    .section-title p {
-      margin:4px 0 0;
-      color:var(--muted);
-      line-height:1.45;
-      font-size:14px;
+    .section-title h2 {
+      margin: 0;
+      font-size: 26px;
+      color: var(--blue);
     }
 
-    .ipa-grid, .theory-grid {
-      display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-      gap:14px;
+    .note {
+      background: #fffbeb;
+      border: 1px solid #fde68a;
+      color: #854d0e;
+      padding: 14px 16px;
+      border-radius: 18px;
+      margin-bottom: 18px;
+      line-height: 1.5;
     }
 
-    .ipa-card, .theory-card {
-      background:var(--card);
-      border:1px solid var(--border);
-      border-radius:22px;
-      padding:17px;
-      box-shadow:0 10px 25px rgba(15,23,42,.06);
-      position:relative;
-      overflow:hidden;
+    .mouth-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 16px;
     }
 
-    .ipa-card:after {
-      content:"";
-      position:absolute;
-      width:120px;
-      height:120px;
-      border-radius:50%;
-      right:-50px;
-      top:-50px;
-      background:rgba(249,115,22,.08);
+    .mouth-card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 18px;
+      box-shadow: 0 12px 30px rgba(15, 23, 42, 0.06);
     }
 
-    .ipa-symbol {
-      position:relative;
-      z-index:1;
-      font-size:42px;
-      line-height:1;
-      font-weight:900;
-      color:var(--orange);
-      margin-bottom:8px;
+    .mouth-card h3 {
+      margin: 0 0 8px;
+      color: var(--orange-dark);
     }
 
-    .ipa-card h3, .theory-card h3 {
-      position:relative;
-      z-index:1;
-      margin:0 0 8px;
-      color:var(--dark);
-      font-size:18px;
+    .mouth-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.55;
     }
 
-    .ipa-card p, .theory-card p, .theory-card li {
-      position:relative;
-      z-index:1;
-      color:var(--muted);
-      line-height:1.5;
-      font-size:14px;
+    .quiz-box {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      box-shadow: var(--shadow);
+      padding: 24px;
     }
 
-    .ipa-guide {
-      position:relative;
-      z-index:1;
-      background:var(--soft);
-      border:1px solid var(--border);
-      border-radius:15px;
-      padding:10px;
-      line-height:1.5;
-      color:var(--muted);
-      font-size:14px;
-    }
-
-    .ipa-guide b { color:var(--orange); }
-
-    .word-list {
-      position:relative;
-      z-index:1;
-      background:#fff7ed;
-      border:1px solid #fed7aa;
-      color:#7c2d12;
-      border-radius:15px;
-      padding:10px;
-      margin-top:10px;
-      line-height:1.5;
-      font-size:13px;
-    }
-
-    [data-theme="dark"] .word-list {
-      background:rgba(249,115,22,.12);
-      color:#fdba74;
-    }
-
-    .sound-actions {
-      position:relative;
-      z-index:1;
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:8px;
-      margin-top:11px;
-    }
-
-    .sound-actions button { font-size:13px; padding:9px 8px; }
-
-    .rule {
-      background:var(--soft);
-      border:1px solid var(--border);
-      border-radius:15px;
-      padding:10px;
-      margin:10px 0;
-      font-weight:800;
-      color:var(--text);
-    }
-
-    .practice-box {
-      background:linear-gradient(135deg,#fff7ed,#fff);
-      border:1px solid #fed7aa;
-      border-radius:26px;
-      padding:22px;
-      margin-bottom:14px;
-    }
-
-    [data-theme="dark"] .practice-box {
-      background:linear-gradient(135deg,rgba(249,115,22,.14),rgba(15,23,42,.7));
-    }
-
-    .badge {
-      display:inline-flex;
-      align-items:center;
-      border-radius:999px;
-      padding:7px 10px;
-      font-size:12px;
-      font-weight:900;
-      background:var(--soft);
-      color:var(--muted);
-      border:1px solid var(--border);
-    }
-
-    .badge.orange {
-      background:#fff7ed;
-      color:#c2410c;
-      border-color:#fed7aa;
-    }
-
-    .question {
-      font-size:clamp(20px,2.6vw,30px);
-      font-weight:900;
-      line-height:1.35;
-      color:var(--dark);
-      margin-top:10px;
-    }
-
-    .prompt {
-      color:var(--muted);
-      margin-top:8px;
-      line-height:1.45;
+    .quiz-question {
+      font-size: 22px;
+      font-weight: 900;
+      color: var(--blue);
+      margin-bottom: 16px;
     }
 
     .options {
-      display:grid;
-      grid-template-columns:repeat(2,1fr);
-      gap:11px;
-      margin:14px 0;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 12px;
     }
 
     .option {
-      background:var(--soft);
-      border:1px solid var(--border);
-      border-radius:18px;
-      text-align:left;
-      line-height:1.45;
-      font-weight:900;
-      color:var(--text);
-      padding:15px;
-      min-height:70px;
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      color: var(--blue);
+      border-radius: 16px;
+      padding: 14px;
+      font-size: 18px;
     }
 
     .option.correct {
-      background:var(--greenSoft);
-      color:#166534;
-      border-color:#86efac;
+      background: #dcfce7;
+      border-color: #86efac;
+      color: #166534;
     }
 
     .option.wrong {
-      background:var(--redSoft);
-      color:#991b1b;
-      border-color:#fecaca;
+      background: #fee2e2;
+      border-color: #fecaca;
+      color: #991b1b;
     }
 
-    .answer {
-      display:none;
-      border:1px solid #bbf7d0;
-      background:#f0fdf4;
-      color:#166534;
-      border-radius:20px;
-      padding:14px;
-      line-height:1.55;
-      margin-top:12px;
+    .quiz-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 18px;
     }
 
-    .answer.show { display:block; }
-    .answer b { color:#0f172a; }
-
-    .word u {
-      text-decoration:underline;
-      text-decoration-thickness:3px;
-      text-underline-offset:3px;
-      color:var(--orange);
-      font-weight:900;
+    .primary-btn {
+      background: var(--orange);
+      color: white;
     }
 
-    .exam-grid {
-      display:grid;
-      gap:12px;
+    .primary-btn:hover {
+      background: var(--orange-dark);
     }
 
-    .exam-item {
-      background:var(--card);
-      border:1px solid var(--border);
-      border-radius:20px;
-      padding:15px;
+    .secondary-btn {
+      background: #f1f5f9;
+      color: var(--blue);
+      border: 1px solid var(--border);
     }
 
-    .exam-item h3 {
-      margin:0 0 10px;
-      color:var(--dark);
-      font-size:16px;
-      line-height:1.45;
+    .feedback {
+      margin-top: 16px;
+      font-weight: 800;
     }
 
-    .exam-options {
-      display:grid;
-      grid-template-columns:repeat(2,1fr);
-      gap:8px;
+    .footer {
+      margin-top: 36px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 14px;
     }
 
-    .exam-options button {
-      border-radius:14px;
-      padding:10px;
-      background:var(--soft);
-      color:var(--text);
-      border:1px solid var(--border);
-      text-align:left;
-    }
+    @media (max-width: 780px) {
+      .header-inner {
+        grid-template-columns: 1fr;
+      }
 
-    .exam-options button.selected {
-      background:var(--orange);
-      color:white;
-      border-color:var(--orange);
-    }
+      .stats {
+        grid-template-columns: 1fr 1fr 1fr;
+      }
 
-    .exam-options button.correct {
-      background:var(--greenSoft);
-      color:#166534;
-      border-color:#86efac;
-    }
+      .toolbar {
+        align-items: stretch;
+      }
 
-    .exam-options button.wrong {
-      background:var(--redSoft);
-      color:#991b1b;
-      border-color:#fecaca;
-    }
-
-    .exam-result {
-      display:none;
-      margin-bottom:14px;
-      padding:14px;
-      border-radius:18px;
-      background:#f0fdf4;
-      border:1px solid #bbf7d0;
-      color:#166534;
-      font-weight:800;
-      line-height:1.55;
-    }
-
-    .exam-result.show { display:block; }
-
-    .toast {
-      position:fixed;
-      right:18px;
-      bottom:18px;
-      background:var(--dark);
-      color:white;
-      padding:12px 14px;
-      border-radius:16px;
-      box-shadow:var(--shadow);
-      opacity:0;
-      transform:translateY(8px);
-      pointer-events:none;
-      transition:.25s ease;
-      z-index:99;
-      max-width:320px;
-      font-weight:800;
-      line-height:1.45;
-    }
-
-    .toast.show {
-      opacity:1;
-      transform:translateY(0);
-    }
-
-    @media(max-width:960px) {
-      .layout { grid-template-columns:1fr; }
-      .panel { position:static; }
-      .stats { grid-template-columns:repeat(2,1fr); }
-      .subtitle { display:none; }
-    }
-
-    @media(max-width:640px) {
-      header { padding:12px 14px; }
-      main { padding:0 12px; }
-      .stats, .btn-grid, .score-box, .options, .exam-options, .sound-actions { grid-template-columns:1fr; }
-      .logo { width:38px; height:38px; border-radius:13px; }
-      .header-inner { align-items:flex-start; }
-      .tab { flex:1 1 auto; }
-      .card, .panel { padding:14px; }
+      .search-box {
+        width: 100%;
+      }
     }
   </style>
 </head>
 <body>
   <header>
     <div class="header-inner">
-      <div class="brand">
-        <div class="logo">V</div>
-        <div>
-          <h1>Vista IPA & Pronunciation Trainer</h1>
-          <p class="subtitle">Bảng IPA · cách đọc phiên âm · từ mẫu · lý thuyết dạng bài · luyện đề ngữ âm vào 10</p>
-        </div>
-      </div>
       <div>
-        <button class="secondary" onclick="toggleTheme()">🌓 Sáng/Tối</button>
-        <button class="primary" onclick="showView('practice')">Luyện ngay</button>
+        <div class="brand">
+          <div class="logo">V</div>
+          <div>
+            <strong>Vista Learning Hub</strong><br />
+            <span style="color:#64748b">IPA Interactive Web App</span>
+          </div>
+        </div>
+        <h1>Bảng phiên âm quốc tế IPA</h1>
+        <p class="subtitle">
+          Học phát âm tiếng Anh qua bảng IPA tương tác: xem cách đọc riêng từng ký hiệu, nghe âm mẫu, nghe từ mẫu, học khẩu hình và luyện tập nhanh.
+        </p>
+      </div>
+
+      <div class="hero-card">
+        <strong>Mục tiêu bài học</strong>
+        <p style="line-height:1.55;color:#64748b;margin-bottom:0">
+          Học sinh nhận diện được âm IPA, biết cách mở miệng - đặt lưỡi - bật hơi, sau đó liên hệ âm với từ vựng quen thuộc.
+        </p>
+        <div class="stats">
+          <div class="stat"><b>20</b><span>Nguyên âm</span></div>
+          <div class="stat"><b>24</b><span>Phụ âm</span></div>
+          <div class="stat"><b>2</b><span>Nút nghe</span></div>
+        </div>
       </div>
     </div>
   </header>
 
   <main>
-    <div class="stats">
-      <div class="stat"><b id="statSounds">0</b><span>Âm IPA trọng tâm</span></div>
-      <div class="stat"><b id="statQuestions">0</b><span>Câu hỏi luyện tập</span></div>
-      <div class="stat"><b id="statCorrect">0</b><span>Câu đúng</span></div>
-      <div class="stat"><b id="statAccuracy">0%</b><span>Tỉ lệ chính xác</span></div>
+    <div class="toolbar">
+      <div class="tabs">
+        <button class="tab-btn active" onclick="showPanel('chart', this)">📘 Bảng IPA</button>
+        <button class="tab-btn" onclick="showPanel('guide', this)">🎯 Cách học</button>
+        <button class="tab-btn" onclick="showPanel('quiz', this)">🧠 Luyện tập</button>
+      </div>
+
+      <div class="search-box">
+        🔎
+        <input id="searchInput" type="text" placeholder="Tìm âm, từ mẫu, cách đọc..." oninput="renderCards()" />
+      </div>
     </div>
 
-    <div class="tabs">
-      <button class="tab active" data-view="ipa" onclick="showView('ipa')">🔤 Bảng IPA</button>
-      <button class="tab" data-view="theory" onclick="showView('theory')">📘 Lý thuyết dạng bài</button>
-      <button class="tab" data-view="practice" onclick="showView('practice')">🧠 Luyện tập theo đề</button>
-    </div>
+    <section id="chart" class="panel active">
+      <div class="filters">
+        <button class="filter-btn active" onclick="setFilter('all', this)">Tất cả</button>
+        <button class="filter-btn" onclick="setFilter('monophthong', this)">Nguyên âm đơn</button>
+        <button class="filter-btn" onclick="setFilter('diphthong', this)">Nguyên âm đôi</button>
+        <button class="filter-btn" onclick="setFilter('voiceless', this)">Phụ âm vô thanh</button>
+        <button class="filter-btn" onclick="setFilter('voiced', this)">Phụ âm hữu thanh</button>
+      </div>
 
-    <div class="layout">
-      <aside class="panel">
-        <h2>⚙️ Bộ lọc học tập</h2>
+      <div class="section-title">
+        <h2>Danh sách âm IPA</h2>
+      </div>
 
-        <label class="field" for="soundGroup">Nhóm âm IPA</label>
-        <select id="soundGroup" onchange="renderIpaChart()">
-          <option value="all">Tất cả âm IPA</option>
-          <option value="vowel">Nguyên âm đơn</option>
-          <option value="diphthong">Nguyên âm đôi</option>
-          <option value="consonant">Phụ âm</option>
-        </select>
+      <div class="note">
+        Mỗi thẻ có 2 nút: <b>Nghe âm IPA</b> để nghe âm/syllable mô phỏng riêng của ký hiệu, và <b>Nghe từ mẫu</b> để nghe âm đó trong một từ thật. Trình duyệt không luôn đọc được ký hiệu IPA cô lập tuyệt đối, nên app dùng âm mô phỏng gần nhất kết hợp với hướng dẫn khẩu hình.
+      </div>
 
-        <label class="field" for="questionTypeSelect">Dạng bài luyện tập</label>
-        <select id="questionTypeSelect" onchange="refreshPractice()">
-          <option value="all">Cả 2 dạng</option>
-          <option value="sound">Dạng 1: Gạch chân phát âm khác</option>
-          <option value="stress">Dạng 2: Trọng âm khác</option>
-        </select>
+      <div id="ipaGrid" class="ipa-grid"></div>
+    </section>
 
-        <label class="field" for="gradeSelect">Từ vựng theo khối</label>
-        <select id="gradeSelect" onchange="refreshPractice()">
-          <option value="all">Lớp 7, 8, 9</option>
-          <option value="7">Lớp 7</option>
-          <option value="8">Lớp 8</option>
-          <option value="9">Lớp 9</option>
-        </select>
+    <section id="guide" class="panel">
+      <div class="section-title">
+        <h2>Cách học IPA hiệu quả</h2>
+      </div>
 
-        <label class="field" for="searchInput">Tìm âm/từ khóa</label>
-        <input id="searchInput" placeholder="VD: /iː/, sheep, -ed, pollution..." oninput="refreshAll()" />
-
-        <label class="field" for="examSize">Số câu đề luyện</label>
-        <select id="examSize">
-          <option value="10">10 câu</option>
-          <option value="20" selected>20 câu</option>
-          <option value="40">40 câu</option>
-        </select>
-
-        <div class="btn-grid">
-          <button class="primary" onclick="newQuestion()">🎲 Random</button>
-          <button class="secondary" onclick="showAnswer()">👀 Đáp án</button>
-          <button class="secondary" onclick="createExam(true)">📝 Tạo đề</button>
-          <button class="danger" onclick="resetScore()">↺ Xóa điểm</button>
+      <div class="mouth-grid">
+        <div class="mouth-card">
+          <h3>1. Phân biệt âm và chữ</h3>
+          <p>Chữ cái là cách viết, còn IPA là cách đọc. Ví dụ chữ “a” có thể đọc là /æ/ trong “cat”, /eɪ/ trong “cake”, hoặc /ə/ trong “about”.</p>
         </div>
-
-        <div class="score-box">
-          <div class="score"><b id="correctCount">0</b><span>Đúng</span></div>
-          <div class="score"><b id="wrongCount">0</b><span>Sai</span></div>
-          <div class="score"><b id="accuracyCount">0%</b><span>Tỉ lệ</span></div>
+        <div class="mouth-card">
+          <h3>2. Học theo khẩu hình</h3>
+          <p>Không chỉ nhìn ký hiệu. Hãy quan sát miệng mở rộng hay hẹp, lưỡi cao hay thấp, âm có rung cổ hay không.</p>
         </div>
-
-        <p class="mini-note">Ngân hàng hiện có 100 câu luyện tập: 50 câu phát âm phần gạch chân và 50 câu trọng âm. App vẫn giữ đúng 3 phần: IPA, lý thuyết, luyện đề.</p>
-      </aside>
-
-      <section>
-        <div id="ipaView" class="view active">
-          <div class="card">
-            <div class="section-title">
-              <div>
-                <h2>🔤 Bảng phiên âm quốc tế IPA</h2>
-                <p>Học ký hiệu IPA, cách đặt khẩu hình, cách đọc phiên âm và nghe từ mẫu. Bấm “Nghe từ” để trình duyệt đọc từ mẫu.</p>
-              </div>
-            </div>
-            <div id="ipaGrid" class="ipa-grid"></div>
-          </div>
+        <div class="mouth-card">
+          <h3>3. Học theo cặp dễ nhầm</h3>
+          <p>Ưu tiên luyện các cặp như /iː/ - /ɪ/, /æ/ - /e/, /ʃ/ - /s/, /tʃ/ - /ʃ/, /θ/ - /t/ để tránh lỗi phát âm phổ biến.</p>
         </div>
-
-        <div id="theoryView" class="view">
-          <div class="card">
-            <div class="section-title">
-              <div>
-                <h2>📘 Lý thuyết về các dạng bài tập ngữ âm</h2>
-                <p>Tập trung 2 dạng thường gặp trong cấu trúc đề thi vào 10: phần gạch chân phát âm khác và trọng âm khác.</p>
-              </div>
-            </div>
-            <div id="theoryGrid" class="theory-grid"></div>
-          </div>
+        <div class="mouth-card">
+          <h3>4. Nghe - nhại - ghi âm</h3>
+          <p>Bấm nghe âm IPA trước, đọc nhại lại 3 lần, sau đó nghe từ mẫu. Cuối cùng tự ghi âm và so sánh.</p>
         </div>
+      </div>
 
-        <div id="practiceView" class="view">
-          <div class="card">
-            <div class="section-title">
-              <div>
-                <h2>🧠 Luyện tập theo cấu trúc đề thi</h2>
-                <p>Chọn đáp án A/B/C/D, app tự chấm và hiện giải thích. Phím tắt: 1-4 chọn đáp án, Enter sang câu mới, H xem đáp án.</p>
-              </div>
-            </div>
+      <div class="section-title">
+        <h2>Nhóm âm trọng tâm cho học sinh Việt Nam</h2>
+      </div>
 
-            <div class="practice-box">
-              <span class="badge orange" id="questionType">Dạng bài</span>
-              <div class="question" id="questionText">Đang tải câu hỏi...</div>
-              <div class="prompt" id="questionPrompt">Chọn đáp án đúng nhất.</div>
-            </div>
-
-            <div id="optionBox" class="options"></div>
-            <div id="answerBox" class="answer"></div>
-
-            <div class="btn-grid">
-              <button class="primary" onclick="newQuestion()">Câu tiếp theo</button>
-              <button class="secondary" onclick="speakCurrent()">🔊 Đọc từ</button>
-            </div>
-
-            <hr style="border:0;border-top:1px solid var(--border);margin:20px 0">
-
-            <div class="section-title">
-              <div>
-                <h2>📝 Đề luyện nhanh</h2>
-                <p>Tạo đề 10/20/40 câu theo bộ lọc hiện tại, rồi nộp bài để chấm điểm.</p>
-              </div>
-              <div>
-                <button class="primary" onclick="createExam(true)">Tạo đề mới</button>
-                <button class="secondary" onclick="submitExam()">Nộp bài</button>
-              </div>
-            </div>
-
-            <div class="exam-result" id="examResult"></div>
-            <div class="exam-grid" id="examGrid"></div>
-          </div>
+      <div class="mouth-grid">
+        <div class="mouth-card">
+          <h3>/θ/ và /ð/</h3>
+          <p>Đặt đầu lưỡi nhẹ giữa hai hàm răng. /θ/ là âm vô thanh trong “think”, /ð/ là âm hữu thanh trong “this”.</p>
         </div>
-      </section>
+        <div class="mouth-card">
+          <h3>/ʃ/ và /tʃ/</h3>
+          <p>/ʃ/ như trong “she”, kéo hơi dài. /tʃ/ như trong “chair”, có âm bật ở đầu.</p>
+        </div>
+        <div class="mouth-card">
+          <h3>/iː/ và /ɪ/</h3>
+          <p>/iː/ dài và căng hơn trong “sheep”. /ɪ/ ngắn và thả lỏng hơn trong “ship”.</p>
+        </div>
+        <div class="mouth-card">
+          <h3>Âm cuối</h3>
+          <p>Không bỏ âm cuối trong các từ như “book”, “name”, “liked”, “dogs”. Âm cuối giúp người nghe hiểu đúng nghĩa.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="quiz" class="panel">
+      <div class="section-title">
+        <h2>Luyện tập nhanh</h2>
+      </div>
+
+      <div class="quiz-box">
+        <div id="quizQuestion" class="quiz-question"></div>
+        <div id="quizOptions" class="options"></div>
+        <div id="quizFeedback" class="feedback"></div>
+        <div class="quiz-actions">
+          <button class="primary-btn" onclick="newQuestion()">Câu tiếp theo</button>
+          <button class="secondary-btn" onclick="speak(currentQuestion.word, 0.78)">Nghe từ mẫu</button>
+        </div>
+      </div>
+    </section>
+
+    <div class="footer">
+      © Vista Learning Hub - Web app học IPA bằng HTML, CSS và JavaScript thuần.
     </div>
   </main>
 
-  <div id="toast" class="toast"></div>
-
   <script>
-    const ipaSounds = [
-      {s:'iː', group:'vowel', name:'i dài', guide:'Miệng kéo ngang, lưỡi nâng cao, đọc dài và căng.', sample:'sheep', ipa:'/ʃiːp/', meaning:'con cừu', words:['sheep','green','teacher','three','sea','key']},
-      {s:'ɪ', group:'vowel', name:'i ngắn', guide:'Miệng thả lỏng hơn /iː/, âm ngắn, không kéo dài.', sample:'ship', ipa:'/ʃɪp/', meaning:'con tàu', words:['ship','sit','fish','milk','city','window']},
-      {s:'e', group:'vowel', name:'e ngắn', guide:'Miệng mở vừa, âm ngắn và gọn.', sample:'bed', ipa:'/bed/', meaning:'cái giường', words:['bed','pen','ten','red','head','friend']},
-      {s:'æ', group:'vowel', name:'e bẹt / a bẹt', guide:'Miệng mở rộng, môi kéo ngang, âm nằm giữa e và a.', sample:'cat', ipa:'/kæt/', meaning:'con mèo', words:['cat','man','bag','family','apple','traffic']},
-      {s:'ɑː', group:'vowel', name:'a dài sâu', guide:'Miệng mở rộng, lưỡi hạ thấp, đọc âm a dài và sâu.', sample:'car', ipa:'/kɑːr/', meaning:'xe hơi', words:['car','father','park','class','start','market']},
-      {s:'ɒ', group:'vowel', name:'o ngắn', guide:'Miệng tròn nhẹ, âm ngắn, thường gặp trong giọng Anh - Anh.', sample:'hot', ipa:'/hɒt/', meaning:'nóng', words:['hot','dog','box','shop','clock','hospital']},
-      {s:'ɔː', group:'vowel', name:'o dài', guide:'Môi tròn, hàm mở vừa, kéo dài âm o.', sample:'horse', ipa:'/hɔːs/', meaning:'con ngựa', words:['horse','door','four','sport','morning','water']},
-      {s:'ʊ', group:'vowel', name:'u ngắn', guide:'Môi tròn nhẹ, lưỡi nâng cao, âm ngắn hơn /uː/.', sample:'book', ipa:'/bʊk/', meaning:'sách', words:['book','good','look','cook','foot','put']},
-      {s:'uː', group:'vowel', name:'u dài', guide:'Môi tròn rõ, lưỡi nâng cao, kéo dài âm u.', sample:'food', ipa:'/fuːd/', meaning:'đồ ăn', words:['food','school','moon','blue','room','student']},
-      {s:'ʌ', group:'vowel', name:'ă / â ngắn', guide:'Miệng mở tự nhiên, âm bật ngắn ở giữa miệng.', sample:'cup', ipa:'/kʌp/', meaning:'cái cốc', words:['cup','bus','sun','mother','study','country']},
-      {s:'ɜː', group:'vowel', name:'ơ dài', guide:'Môi thả lỏng, âm ơ kéo dài.', sample:'bird', ipa:'/bɜːd/', meaning:'con chim', words:['bird','girl','work','world','learn','turn']},
-      {s:'ə', group:'vowel', name:'ơ nhẹ / schwa', guide:'Âm rất nhẹ, ngắn, miệng thả lỏng, thường ở âm tiết không nhấn.', sample:'about', ipa:'/əˈbaʊt/', meaning:'về/khoảng', words:['about','banana','teacher','doctor','today','again']},
-
-      {s:'eɪ', group:'diphthong', name:'êi', guide:'Bắt đầu từ /e/, trượt sang /ɪ/, không đọc rời hai âm.', sample:'cake', ipa:'/keɪk/', meaning:'bánh', words:['cake','name','day','play','station','eight']},
-      {s:'aɪ', group:'diphthong', name:'ai', guide:'Bắt đầu từ /a/, trượt lên /ɪ/.', sample:'bike', ipa:'/baɪk/', meaning:'xe đạp', words:['bike','time','five','my','white','smile']},
-      {s:'ɔɪ', group:'diphthong', name:'oi', guide:'Bắt đầu môi tròn ở /ɔː/, trượt sang /ɪ/.', sample:'boy', ipa:'/bɔɪ/', meaning:'cậu bé', words:['boy','toy','coin','voice','choice','enjoy']},
-      {s:'aʊ', group:'diphthong', name:'ao', guide:'Bắt đầu mở rộng /a/, rồi tròn môi dần về /ʊ/.', sample:'house', ipa:'/haʊs/', meaning:'ngôi nhà', words:['house','now','cow','town','flower','about']},
-      {s:'əʊ', group:'diphthong', name:'ơu', guide:'Bắt đầu từ /ə/, trượt sang /ʊ/, môi tròn dần.', sample:'phone', ipa:'/fəʊn/', meaning:'điện thoại', words:['phone','go','home','open','road','window']},
-      {s:'ɪə', group:'diphthong', name:'iə', guide:'Bắt đầu từ /ɪ/, trượt nhẹ về /ə/.', sample:'near', ipa:'/nɪə/', meaning:'gần', words:['near','ear','clear','here','year','idea']},
-      {s:'eə', group:'diphthong', name:'eə', guide:'Bắt đầu từ /e/, trượt nhẹ về /ə/, miệng mở vừa.', sample:'hair', ipa:'/heə/', meaning:'tóc', words:['hair','chair','where','there','care','parent']},
-      {s:'ʊə', group:'diphthong', name:'uə', guide:'Bắt đầu từ /ʊ/, trượt nhẹ về /ə/.', sample:'tour', ipa:'/tʊə/', meaning:'chuyến tham quan', words:['tour','poor','sure','cure','tourist','pure']},
-
-      {s:'p', group:'consonant', name:'p vô thanh', guide:'Hai môi khép rồi bật ra, không rung cổ họng.', sample:'pen', ipa:'/pen/', meaning:'bút', words:['pen','paper','pencil','happy','map','stop']},
-      {s:'b', group:'consonant', name:'b hữu thanh', guide:'Hai môi khép rồi bật ra, có rung cổ họng.', sample:'book', ipa:'/bʊk/', meaning:'sách', words:['book','bag','baby','table','job','club']},
-      {s:'t', group:'consonant', name:'t vô thanh', guide:'Đầu lưỡi chạm lợi trên rồi bật ra, không rung cổ họng.', sample:'tea', ipa:'/tiː/', meaning:'trà', words:['tea','teacher','table','student','cat','sit']},
-      {s:'d', group:'consonant', name:'d hữu thanh', guide:'Đầu lưỡi chạm lợi trên rồi bật ra, có rung cổ họng.', sample:'dog', ipa:'/dɒg/', meaning:'chó', words:['dog','day','door','student','good','friend']},
-      {s:'k', group:'consonant', name:'k vô thanh', guide:'Gốc lưỡi chạm vòm mềm rồi bật ra, không rung cổ họng.', sample:'key', ipa:'/kiː/', meaning:'chìa khóa', words:['key','cat','school','class','book','milk']},
-      {s:'g', group:'consonant', name:'g hữu thanh', guide:'Gốc lưỡi chạm vòm mềm rồi bật ra, có rung cổ họng.', sample:'go', ipa:'/gəʊ/', meaning:'đi', words:['go','girl','green','garden','big','dog']},
-      {s:'f', group:'consonant', name:'f vô thanh', guide:'Răng trên chạm môi dưới, đẩy hơi ra, không rung.', sample:'fish', ipa:'/fɪʃ/', meaning:'cá', words:['fish','family','food','phone','photo','laugh']},
-      {s:'v', group:'consonant', name:'v hữu thanh', guide:'Răng trên chạm môi dưới, đẩy hơi ra, có rung.', sample:'very', ipa:'/ˈveri/', meaning:'rất', words:['very','video','visit','village','seven','love']},
-      {s:'θ', group:'consonant', name:'th vô thanh', guide:'Đầu lưỡi đặt nhẹ giữa hai hàm răng, đẩy hơi ra, không rung.', sample:'think', ipa:'/θɪŋk/', meaning:'nghĩ', words:['think','three','thank','thin','math','healthy']},
-      {s:'ð', group:'consonant', name:'th hữu thanh', guide:'Đầu lưỡi đặt nhẹ giữa hai hàm răng, đẩy hơi ra, có rung.', sample:'this', ipa:'/ðɪs/', meaning:'này', words:['this','that','these','those','mother','weather']},
-      {s:'s', group:'consonant', name:'s vô thanh', guide:'Đầu lưỡi gần lợi trên, hơi đi qua khe hẹp, không rung.', sample:'sun', ipa:'/sʌn/', meaning:'mặt trời', words:['sun','sit','school','class','lesson','bus']},
-      {s:'z', group:'consonant', name:'z hữu thanh', guide:'Giống /s/ nhưng có rung cổ họng.', sample:'zoo', ipa:'/zuː/', meaning:'sở thú', words:['zoo','zero','busy','music','easy','cars']},
-      {s:'ʃ', group:'consonant', name:'sh vô thanh', guide:'Môi hơi chu, lưỡi nâng gần vòm miệng, âm gió dài.', sample:'she', ipa:'/ʃiː/', meaning:'cô ấy', words:['she','ship','shop','English','special','finish']},
-      {s:'ʒ', group:'consonant', name:'zh hữu thanh', guide:'Giống /ʃ/ nhưng có rung, thường gặp trong vision.', sample:'vision', ipa:'/ˈvɪʒn/', meaning:'tầm nhìn', words:['vision','television','usually','measure','decision','garage']},
-      {s:'h', group:'consonant', name:'h vô thanh', guide:'Đẩy hơi nhẹ từ cổ họng, không rung mạnh.', sample:'hat', ipa:'/hæt/', meaning:'mũ', words:['hat','house','home','hello','happy','hair']},
-      {s:'tʃ', group:'consonant', name:'ch vô thanh', guide:'Âm bật: đầu lưỡi bật ra rồi chuyển nhanh sang âm gió /ʃ/.', sample:'chair', ipa:'/tʃeə/', meaning:'ghế', words:['chair','teacher','children','watch','kitchen','choose']},
-      {s:'dʒ', group:'consonant', name:'j hữu thanh', guide:'Giống /tʃ/ nhưng có rung cổ họng.', sample:'jam', ipa:'/dʒæm/', meaning:'mứt', words:['jam','job','June','orange','village','bridge']},
-      {s:'m', group:'consonant', name:'m hữu thanh', guide:'Hai môi khép, âm đi qua mũi, có rung.', sample:'man', ipa:'/mæn/', meaning:'người đàn ông', words:['man','mother','morning','family','room','time']},
-      {s:'n', group:'consonant', name:'n hữu thanh', guide:'Đầu lưỡi chạm lợi trên, âm đi qua mũi, có rung.', sample:'name', ipa:'/neɪm/', meaning:'tên', words:['name','nine','new','student','green','pen']},
-      {s:'ŋ', group:'consonant', name:'ng hữu thanh', guide:'Gốc lưỡi nâng lên, âm đi qua mũi, giống âm cuối trong sing.', sample:'sing', ipa:'/sɪŋ/', meaning:'hát', words:['sing','song','English','morning','young','thing']},
-      {s:'l', group:'consonant', name:'l hữu thanh', guide:'Đầu lưỡi chạm lợi trên, hơi đi hai bên lưỡi, có rung.', sample:'leg', ipa:'/leg/', meaning:'chân', words:['leg','like','look','school','family','table']},
-      {s:'r', group:'consonant', name:'r hữu thanh', guide:'Lưỡi cong nhẹ hoặc kéo lùi, không chạm mạnh như tiếng Việt.', sample:'red', ipa:'/red/', meaning:'màu đỏ', words:['red','rice','room','right','friend','story']},
-      {s:'j', group:'consonant', name:'y hữu thanh', guide:'Âm giống y trong tiếng Việt, lưỡi nâng cao, có rung.', sample:'yes', ipa:'/jes/', meaning:'vâng', words:['yes','year','young','yellow','use','music']},
-      {s:'w', group:'consonant', name:'w hữu thanh', guide:'Môi tròn rồi mở nhanh, có rung.', sample:'water', ipa:'/ˈwɔːtə/', meaning:'nước', words:['water','we','window','white','where','weather']}
+    const sounds = [
+      { symbol: "iː", type: "monophthong", label: "Nguyên âm dài", soundName: "i dài", soundText: "ee", guide: "Miệng kéo ngang, lưỡi nâng cao, đọc dài như âm 'i' kéo dài.", word: "sheep", ipa: "/ʃiːp/", meaning: "con cừu" },
+      { symbol: "ɪ", type: "monophthong", label: "Nguyên âm ngắn", soundName: "i ngắn", soundText: "it", guide: "Miệng thả lỏng hơn /iː/, âm ngắn, không kéo dài.", word: "ship", ipa: "/ʃɪp/", meaning: "con tàu" },
+      { symbol: "e", type: "monophthong", label: "Nguyên âm ngắn", soundName: "e ngắn", soundText: "egg", guide: "Miệng mở vừa, đọc gần giống 'e' trong tiếng Việt nhưng ngắn và gọn.", word: "bed", ipa: "/bed/", meaning: "cái giường" },
+      { symbol: "æ", type: "monophthong", label: "Nguyên âm ngắn", soundName: "e bẹt / a bẹt", soundText: "cat", guide: "Miệng mở rộng, môi kéo ngang, âm nằm giữa 'e' và 'a'.", word: "cat", ipa: "/kæt/", meaning: "con mèo" },
+      { symbol: "ɑː", type: "monophthong", label: "Nguyên âm dài", soundName: "a dài sâu", soundText: "ah", guide: "Miệng mở rộng, lưỡi hạ thấp, đọc âm 'a' dài và sâu.", word: "car", ipa: "/kɑːr/", meaning: "xe hơi" },
+      { symbol: "ɒ", type: "monophthong", label: "Nguyên âm ngắn", soundName: "o ngắn", soundText: "hot", guide: "Miệng tròn nhẹ, âm ngắn, thường gặp trong giọng Anh - Anh.", word: "hot", ipa: "/hɒt/", meaning: "nóng" },
+      { symbol: "ɔː", type: "monophthong", label: "Nguyên âm dài", soundName: "o dài", soundText: "or", guide: "Môi tròn, kéo dài âm 'o', hàm mở vừa.", word: "horse", ipa: "/hɔːs/", meaning: "con ngựa" },
+      { symbol: "ʊ", type: "monophthong", label: "Nguyên âm ngắn", soundName: "u ngắn", soundText: "book", guide: "Môi tròn nhẹ, lưỡi nâng cao, âm ngắn hơn /uː/.", word: "book", ipa: "/bʊk/", meaning: "quyển sách" },
+      { symbol: "uː", type: "monophthong", label: "Nguyên âm dài", soundName: "u dài", soundText: "oo", guide: "Môi tròn rõ, lưỡi nâng cao, kéo dài âm 'u'.", word: "food", ipa: "/fuːd/", meaning: "đồ ăn" },
+      { symbol: "ʌ", type: "monophthong", label: "Nguyên âm ngắn", soundName: "ă / â ngắn", soundText: "up", guide: "Miệng mở tự nhiên, âm bật ngắn ở giữa miệng.", word: "cup", ipa: "/kʌp/", meaning: "cái cốc" },
+      { symbol: "ɜː", type: "monophthong", label: "Nguyên âm dài", soundName: "ơ dài", soundText: "er", guide: "Môi thả lỏng, âm 'ơ' kéo dài, không cong lưỡi quá mạnh.", word: "bird", ipa: "/bɜːd/", meaning: "con chim" },
+      { symbol: "ə", type: "monophthong", label: "Âm schwa", soundName: "ơ nhẹ", soundText: "about", guide: "Âm rất nhẹ và ngắn, miệng thả lỏng, thường nằm ở âm tiết không nhấn.", word: "about", ipa: "/əˈbaʊt/", meaning: "về, khoảng" },
+      { symbol: "eɪ", type: "diphthong", label: "Nguyên âm đôi", soundName: "êi", soundText: "ay", guide: "Bắt đầu từ /e/, trượt dần sang /ɪ/. Không đọc rời thành hai âm.", word: "cake", ipa: "/keɪk/", meaning: "bánh" },
+      { symbol: "aɪ", type: "diphthong", label: "Nguyên âm đôi", soundName: "ai", soundText: "eye", guide: "Bắt đầu từ âm /a/, trượt lên /ɪ/, giống âm 'ai' nhưng gọn hơn.", word: "bike", ipa: "/baɪk/", meaning: "xe đạp" },
+      { symbol: "ɔɪ", type: "diphthong", label: "Nguyên âm đôi", soundName: "oi", soundText: "boy", guide: "Bắt đầu môi tròn ở /ɔː/, trượt sang /ɪ/.", word: "boy", ipa: "/bɔɪ/", meaning: "cậu bé" },
+      { symbol: "aʊ", type: "diphthong", label: "Nguyên âm đôi", soundName: "ao", soundText: "ow", guide: "Bắt đầu mở rộng /a/, rồi tròn môi dần về /ʊ/.", word: "house", ipa: "/haʊs/", meaning: "ngôi nhà" },
+      { symbol: "əʊ", type: "diphthong", label: "Nguyên âm đôi", soundName: "ơu", soundText: "oh", guide: "Bắt đầu từ âm /ə/, trượt sang /ʊ/, môi tròn dần.", word: "phone", ipa: "/fəʊn/", meaning: "điện thoại" },
+      { symbol: "ɪə", type: "diphthong", label: "Nguyên âm đôi", soundName: "iə", soundText: "ear", guide: "Bắt đầu từ /ɪ/, trượt nhẹ về /ə/.", word: "near", ipa: "/nɪə/", meaning: "gần" },
+      { symbol: "eə", type: "diphthong", label: "Nguyên âm đôi", soundName: "eə", soundText: "air", guide: "Bắt đầu từ /e/, trượt nhẹ về /ə/, miệng mở vừa.", word: "hair", ipa: "/heə/", meaning: "tóc" },
+      { symbol: "ʊə", type: "diphthong", label: "Nguyên âm đôi", soundName: "uə", soundText: "tour", guide: "Bắt đầu từ /ʊ/, trượt nhẹ về /ə/, môi tròn rồi thả lỏng.", word: "tour", ipa: "/tʊə/", meaning: "chuyến tham quan" },
+      { symbol: "p", type: "voiceless", label: "Phụ âm vô thanh", soundName: "p bật hơi", soundText: "puh", guide: "Hai môi khép lại rồi bật ra, không rung cổ họng.", word: "pen", ipa: "/pen/", meaning: "bút" },
+      { symbol: "b", type: "voiced", label: "Phụ âm hữu thanh", soundName: "b", soundText: "buh", guide: "Hai môi khép lại rồi bật ra, có rung cổ họng.", word: "book", ipa: "/bʊk/", meaning: "sách" },
+      { symbol: "t", type: "voiceless", label: "Phụ âm vô thanh", soundName: "t bật hơi", soundText: "tuh", guide: "Đầu lưỡi chạm lợi trên rồi bật ra, không rung cổ họng.", word: "tea", ipa: "/tiː/", meaning: "trà" },
+      { symbol: "d", type: "voiced", label: "Phụ âm hữu thanh", soundName: "d", soundText: "duh", guide: "Đầu lưỡi chạm lợi trên rồi bật ra, có rung cổ họng.", word: "dog", ipa: "/dɒg/", meaning: "chó" },
+      { symbol: "k", type: "voiceless", label: "Phụ âm vô thanh", soundName: "k bật hơi", soundText: "kuh", guide: "Gốc lưỡi chạm vòm mềm rồi bật ra, không rung cổ họng.", word: "key", ipa: "/kiː/", meaning: "chìa khóa" },
+      { symbol: "g", type: "voiced", label: "Phụ âm hữu thanh", soundName: "g", soundText: "guh", guide: "Gốc lưỡi chạm vòm mềm rồi bật ra, có rung cổ họng.", word: "go", ipa: "/gəʊ/", meaning: "đi" },
+      { symbol: "f", type: "voiceless", label: "Phụ âm vô thanh", soundName: "f", soundText: "fff", guide: "Răng trên chạm môi dưới, đẩy hơi ra, không rung cổ họng.", word: "fish", ipa: "/fɪʃ/", meaning: "cá" },
+      { symbol: "v", type: "voiced", label: "Phụ âm hữu thanh", soundName: "v", soundText: "vvv", guide: "Răng trên chạm môi dưới, đẩy hơi ra, có rung cổ họng.", word: "very", ipa: "/ˈveri/", meaning: "rất" },
+      { symbol: "θ", type: "voiceless", label: "Phụ âm vô thanh", soundName: "th vô thanh", soundText: "think", guide: "Đầu lưỡi đặt nhẹ giữa hai hàm răng, đẩy hơi ra, không rung cổ họng.", word: "think", ipa: "/θɪŋk/", meaning: "nghĩ" },
+      { symbol: "ð", type: "voiced", label: "Phụ âm hữu thanh", soundName: "th hữu thanh", soundText: "this", guide: "Đầu lưỡi đặt nhẹ giữa hai hàm răng, đẩy hơi ra, có rung cổ họng.", word: "this", ipa: "/ðɪs/", meaning: "này" },
+      { symbol: "s", type: "voiceless", label: "Phụ âm vô thanh", soundName: "s", soundText: "sss", guide: "Đầu lưỡi gần lợi trên, hơi đi qua khe hẹp, không rung cổ họng.", word: "sun", ipa: "/sʌn/", meaning: "mặt trời" },
+      { symbol: "z", type: "voiced", label: "Phụ âm hữu thanh", soundName: "z", soundText: "zzz", guide: "Giống /s/ nhưng có rung cổ họng.", word: "zoo", ipa: "/zuː/", meaning: "sở thú" },
+      { symbol: "ʃ", type: "voiceless", label: "Phụ âm vô thanh", soundName: "sh", soundText: "sh", guide: "Môi hơi chu, lưỡi nâng gần vòm miệng, âm gió dài, không rung cổ họng.", word: "she", ipa: "/ʃiː/", meaning: "cô ấy" },
+      { symbol: "ʒ", type: "voiced", label: "Phụ âm hữu thanh", soundName: "zh", soundText: "vision", guide: "Giống /ʃ/ nhưng có rung cổ họng, thường gặp trong 'vision'.", word: "vision", ipa: "/ˈvɪʒn/", meaning: "tầm nhìn" },
+      { symbol: "h", type: "voiceless", label: "Phụ âm vô thanh", soundName: "h", soundText: "huh", guide: "Đẩy hơi nhẹ từ cổ họng, không rung mạnh, miệng mở tự nhiên.", word: "hat", ipa: "/hæt/", meaning: "mũ" },
+      { symbol: "tʃ", type: "voiceless", label: "Phụ âm vô thanh", soundName: "ch", soundText: "ch", guide: "Âm bật: đầu lưỡi bật ra rồi chuyển nhanh sang âm gió /ʃ/.", word: "chair", ipa: "/tʃeə/", meaning: "ghế" },
+      { symbol: "dʒ", type: "voiced", label: "Phụ âm hữu thanh", soundName: "j", soundText: "judge", guide: "Giống /tʃ/ nhưng có rung cổ họng, như âm đầu trong 'jam'.", word: "jam", ipa: "/dʒæm/", meaning: "mứt" },
+      { symbol: "m", type: "voiced", label: "Phụ âm hữu thanh", soundName: "m", soundText: "mmm", guide: "Hai môi khép, âm đi qua mũi, có rung.", word: "man", ipa: "/mæn/", meaning: "người đàn ông" },
+      { symbol: "n", type: "voiced", label: "Phụ âm hữu thanh", soundName: "n", soundText: "nnn", guide: "Đầu lưỡi chạm lợi trên, âm đi qua mũi, có rung.", word: "name", ipa: "/neɪm/", meaning: "tên" },
+      { symbol: "ŋ", type: "voiced", label: "Phụ âm hữu thanh", soundName: "ng", soundText: "sing", guide: "Gốc lưỡi nâng lên, âm đi qua mũi, giống âm cuối trong 'sing'.", word: "sing", ipa: "/sɪŋ/", meaning: "hát" },
+      { symbol: "l", type: "voiced", label: "Phụ âm hữu thanh", soundName: "l", soundText: "lll", guide: "Đầu lưỡi chạm lợi trên, hơi đi hai bên lưỡi, có rung.", word: "leg", ipa: "/leg/", meaning: "chân" },
+      { symbol: "r", type: "voiced", label: "Phụ âm hữu thanh", soundName: "r", soundText: "red", guide: "Lưỡi cong nhẹ hoặc kéo lùi, không chạm mạnh vào lợi như tiếng Việt.", word: "red", ipa: "/red/", meaning: "màu đỏ" },
+      { symbol: "j", type: "voiced", label: "Phụ âm hữu thanh", soundName: "y", soundText: "yes", guide: "Âm giống 'y' trong tiếng Việt, lưỡi nâng cao, có rung.", word: "yes", ipa: "/jes/", meaning: "vâng" },
+      { symbol: "w", type: "voiced", label: "Phụ âm hữu thanh", soundName: "w", soundText: "we", guide: "Môi tròn rồi mở nhanh, có rung, giống bắt đầu của từ 'we'.", word: "water", ipa: "/ˈwɔːtə/", meaning: "nước" }
     ];
 
-    const theory = [
-      {
-        title:'Dạng 1: Chọn từ có phần gạch chân phát âm khác',
-        rule:'Đề cho 4 từ A/B/C/D. Học sinh xác định phần gạch chân trong từ nào có âm khác 3 từ còn lại.',
-        points:[
-          'Nhìn đúng phần gạch chân, không chọn theo nghĩa.',
-          'Đọc âm thật của phần gạch chân trong từng từ.',
-          'Tìm 3 từ cùng âm và 1 từ khác âm.',
-          'Nhóm thường gặp: -ed, -s/-es, ch, th, ea, oo, ou, ow, a, i, âm câm.'
-        ],
-        examples:['wanted /ɪd/ khác played, lived, cleaned /d/','books /s/ khác pens, bags, rooms /z/','chef /ʃ/ khác cheap, children, chair /tʃ/']
-      },
-      {
-        title:'Quy tắc phát âm đuôi -ed',
-        rule:'Đuôi -ed có 3 cách đọc: /t/, /d/, /ɪd/.',
-        points:[
-          '/ɪd/: sau /t/, /d/: wanted, needed, visited.',
-          '/t/: sau âm vô thanh /p, k, f, s, ʃ, tʃ/: stopped, watched, laughed.',
-          '/d/: sau nguyên âm và âm hữu thanh còn lại: played, cleaned, opened.'
-        ],
-        examples:['watched /t/','needed /ɪd/','played /d/']
-      },
-      {
-        title:'Quy tắc phát âm -s/-es',
-        rule:'Đuôi -s/-es có 3 cách đọc: /s/, /z/, /ɪz/.',
-        points:[
-          '/ɪz/: sau /s, z, ʃ, ʒ, tʃ, dʒ/: watches, classes, buses.',
-          '/s/: sau âm vô thanh /p, t, k, f, θ/: books, cups, laughs.',
-          '/z/: sau nguyên âm và âm hữu thanh còn lại: pens, rooms, bags.'
-        ],
-        examples:['books /s/','watches /ɪz/','plays /z/']
-      },
-      {
-        title:'Dạng 2: Chọn từ có trọng âm khác',
-        rule:'Đề cho 4 từ. Chọn từ có vị trí trọng âm khác 3 từ còn lại.',
-        points:[
-          'Đếm số âm tiết trước.',
-          'Danh từ/tính từ 2 âm tiết thường nhấn âm 1: teacher, happy.',
-          'Động từ 2 âm tiết thường nhấn âm 2: enjoy, invite.',
-          'Hậu tố -tion, -sion, -ic, -ity, -ial thường kéo trọng âm về trước hậu tố.',
-          'Hậu tố -ee, -eer, -ese thường nhận trọng âm chính.'
-        ],
-        examples:['ˈteacher, ˈhappy','enˈjoy, inˈvite','eduˈcation, autoˈmatic']
-      },
-      {
-        title:'Cách làm nhanh khi đi thi',
-        rule:'Mục tiêu là loại nhanh 3 từ giống nhau và tìm 1 từ khác.',
-        points:[
-          'Không đọc theo chữ cái tiếng Việt.',
-          'Với phát âm, đọc phần gạch chân thành âm IPA gần đúng.',
-          'Với trọng âm, đánh dấu âm nhấn bằng dấu ˈ trước âm tiết.',
-          'Nếu phân vân, kiểm tra từ loại và hậu tố.',
-          'Sau khi chọn, đọc lại cả 4 từ để xác nhận.'
-        ],
-        examples:['present (n/adj): ˈpresent; present (v): preˈsent','record (n): ˈrecord; record (v): reˈcord']
-      }
-    ];
-
-    const questions = [
-      {
-            "type": "sound",
-            "grade": 7,
-            "rule": "-ed",
-            "answer": "A",
-            "explain": "wanted đọc /ɪd/ vì kết thúc bằng /t/. Ba từ còn lại played, cleaned, opened đọc /d/.",
-            "options": [
-                  [
-                        "wanted",
-                        "ed"
-                  ],
-                  [
-                        "played",
-                        "ed"
-                  ],
-                  [
-                        "cleaned",
-                        "ed"
-                  ],
-                  [
-                        "opened",
-                        "ed"
-                  ]
-            ]
-      },
-      {
-            "type": "sound",
-            "grade": 7,
-            "rule": "-ed",
-            "answer": "C",
-            "explain": "watched đọc /t/ vì âm cuối /tʃ/ là âm vô thanh. Ba từ còn lại listened, enjoyed, played đọc /d/.",
-            "options": [
-                  [
-                        "listened",
-                        "ed"
-                  ],
-                  [
-                        "enjoyed",
-                        "ed"
-                  ],
-                  [
-                        "watched",
-                        "ed"
-                  ],
-                  [
-                        "played",
-                        "ed"
-                  ]
-            ]
-      },
-      {
-            "type": "sound",
-            "grade": 8,
-            "rule": "-ed",
-            "answer": "B",
-            "explain": "needed đọc /ɪd/ vì kết thúc bằng /d/. Helped, laughed, stopped đọc /t/.",
-            "options": [
-                  [
-                        "helped",
-                        "ed"
-                  ],
-                  [
-                        "needed",
-                        "ed"
-                  ],
-                  [
-                        "laughed",
-                        "ed"
-                  ],
-                  [
-                        "stopped",
-                        "ed"
-                  ]
-            ]
-      },
-      {
-            "type": "sound",
-            "grade": 9,
-            "rule": "-ed",
-            "answer": "D",
-            "explain": "visited đọc /ɪd/ vì kết thúc bằng /t/. Lived, moved, opened đọc /d/.",
-            "options": [
-                  [
-                        "lived",
-                        "ed"
-                  ],
-                  [
-                        "moved",
-                        "ed"
-                  ],
-                  [
-                        "opened",
-                        "ed"
-                  ],
-                  [
-                        "visited",
-                        "ed"
-                  ]
-            ]
-      },
-      {
-            "type": "sound",
-            "grade": 8,
-            "rule": "-ed",
-            "answer": "A",
-            "explain": "stopped đọc /t/. Needed, visited, decided đọc /ɪd/ vì kết thúc bằng /t/ hoặc /d/.",
-            "options": [
-                  [
-                        "stopped",
-                        "ed"
-                  ],
-                  [
-                        "needed",
-                        "ed"
-                  ],
-                  [
-                        "visited",
-                        "ed"
-                  ],
-                  [
-                        "decided",
-                        "ed"
-                  ]
-            ]
-      },
-      {
-            "type": "sound",
-            "grade": 7,
-            "rule": "-ed",
-            "answer": "A",
-            "explain": "played đọc /d/ vì âm cuối là nguyên âm. Watched, washed, looked đọc /t/.",
-            "options": [
-                  [
-                        "played",
-                        "ed"
-                  ],
-                  [
-                        "watched",
-                        "ed"
-                  ],
-                  [
-                        "washed",
-                        "ed"
-                  ],
-                  [
-                        "looked",
-                        "ed"
-                  ]
-            ]
-      },
-      {
-            "type": "sound",
-            "grade": 9,
-            "rule": "-ed",
-            "answer": "B",
-            "explain": "started đọc /ɪd/ vì kết thúc bằng /t/. Learned, cleaned, opened đọc /d/.",
-            "options": [
-                  [
-                        "learned",
-                        "ed"
-                  ],
-                  [
-                        "started",
-                        "ed"
-                  ],
-                  [
-                        "cleaned",
-                        "ed"
-                  ],
-                  [
-                        "opened",
-                        "ed"
-                  ]
-            ]
-      },
-      {
-            "type": "sound",
-            "grade": 8,
-            "rule": "-ed",
-            "answer": "D",
-            "explain": "missed đọc /t/. Needed, decided, visited đọc /ɪd/.",
-            "options": [
-                  [
-                        "needed",
-                        "ed"
-                  ],
-                  [
-                        "decided",
-                        "ed"
-                  ],
-                  [
-                        "visited",
-                        "ed"
-                  ],
-                  [
-                        "missed",
-                        "ed"
-                  ]
-            ]
-      },
-      {
-            "type": "sound",
-            "grade": 7,
-            "rule": "-s/-es",
-            "answer": "A",
-            "explain": "books đọc /s/ vì âm cuối /k/ vô thanh. Pens, rooms, bags đọc /z/.",
-            "options": [
-                  [
-                        "books",
-                        "s"
-                  ],
-                  [
-                        "pens",
-                        "s"
-                  ],
-                  [
-                        "rooms",
-                        "s"
-                  ],
-                  [
-                        "bags",
-                        "s"
-                  ]
-            ]
-      },
-      {
-            "type": "sound",
-            "grade": 8,
-            "rule": "-s/-es",
-            "answer": "B",
-            "explain": "classes đọc /ɪz/ vì kết thúc bằng /s/. Plays, days, trees đọc /z/.",
-            "options": [
-                  [
-                        "plays",
-                        "s"
-                  ],
-                  [
-                        "classes",
-                        "es"
-                  ],
-                  [
-                        "days",
-                        "s"
-                  ],
-                  [
-                        "trees",
-                        "s"
-                  ]
-            ]
-      },
-      {
-            "type": "sound",
-            "grade": 9,
-            "rule": "-s/-es",
-            "answer": "D",
-            "explain": "laughs đọc /s/ vì âm cuối /f/ vô thanh. Goes, does, studies đọc /z/.",
-            "options": [
-                  [
-                        "goes",
-                        "es"
-                  ],
-                  [
-                        "does",
-                        "es"
-                  ],
-                  [
-                        "studies",
-                        "es"
-                  ],
-                  [
-                        "laughs",
-                        "s"
-                  ]
-            ]
-      },
-      {
-            "type": "sound",
-            "grade": 7,
-            "rule": "-s/-es",
-            "answer": "A",
-            "explain": "watches đọc /ɪz/ vì kết thúc bằng /tʃ/. Cooks, maps, cups đọc /s/.",
-            "options": [
-                  [
-                        "watches",
-                        "es"
-                  ],
-                  [
-                        "cooks",
-                        "s"
-                  ],
-                  [
-                        "maps",
-                        "s"
-                  ],
-                  [
-                        "cups",
-                        "s"
-                  ]
-            ]
-      },
-      {
-            "type": "sound",
-            "grade": 8,
-            "rule": "-s/-es",
-            "answer": "C",
-            "explain": "students đọc /s/ vì âm cuối /t/ vô thanh. Teachers, dogs, pens đọc /z/.",
-            "options": [
-                  [
-                        "teachers",
-                        "s"
-                  ],
-                  [
-                        "dogs",
-                        "s"
-                  ],
-                  [
-                        "students",
-                        "s"
-                  ],
-                  [
-                        "pens",
-                        "s"
-                  ]
-            ]
-      },
-      {
-            "type": "sound",
-            "grade": 9,
-            "rule": "-s/-es",
-            "answer": "A",
-            "explain": "buses đọc /ɪz/ vì kết thúc bằng /s/. Rooms, friends, pens đọc /z/.",
-            "options": [
-                  [
-                        "buses",
-                        "es"
-                  ],
-                  [
-                        "rooms",
-                        "s"
-                  ],
-                  [
-                        "friends",
-                        "s"
-                  ],
-                  [
-                        "pens",
-                        "s"
-                  ]
-            ]
-      },
-      {
-            "type": "sound",
-            "grade": 7,
-            "rule": "-s/-es",
-            "answer": "B",
-            "explain": "months đọc /s/ vì âm cuối /θ/ vô thanh. Plays, boys, girls đọc /z/.",
-            "options": [
-                  [
-                        "plays",
-                        "s"
-                  ],
-                  [
-                        "months",
-                        "s"
-                  ],
-                  [
-                        "boys",
-                        "s"
-                  ],
-                  [
-                        "girls",
-                        "s"
-                  ]
-            ]
-      },
-      {
-            "type": "sound",
-            "grade": 8,
-            "rule": "-s/-es",
-            "answer": "D",
-            "explain": "dishes đọc /ɪz/ vì kết thúc bằng /ʃ/. Plays, runs, days đọc /z/.",
-            "options": [
-                  [
-                        "plays",
-                        "s"
-                  ],
-                  [
-                        "runs",
-                        "s"
-                  ],
-                  [
-                        "days",
-                        "s"
-                  ],
-                  [
-                        "dishes",
-                        "es"
-                  ]
-            ]
-      },
-      {
-            "type": "sound",
-            "grade": 7,
-            "rule": "ch",
-            "answer": "C",
-            "explain": "chef có ch đọc /ʃ/. Chair, children, choose có ch đọc /tʃ/.",
-            "options": [
-                  [
-                        "chair",
-                        "ch"
-                  ],
-                  [
-                        "children",
-                        "ch"
-                  ],
-                  [
-                        "chef",
-                        "ch"
-                  ],
-                  [
-                        "choose",
-                        "ch"
-                  ]
-            ]
-      },
-      {
-            "type": "sound",
-            "grade": 8,
-            "rule": "ch",
-            "answer": "A",
-            "explain": "machine có ch đọc /ʃ/. Cheap, chicken, teacher có ch đọc /tʃ/.",
-            "options": [
-                  [
-                        "machine",
-                        "ch"
-                  ],
-                  [
-                        "cheap",
-                        "ch"
-                  ],
-                  [
-                        "chicken",
-                        "ch"
-                  ],
-                  [
-                        "teacher",
-                        "ch"
-                  ]
-            ]
-      },
-      {
-            "type": "sound",
-            "grade": 9,
-            "rule": "ch",
-            "answer": "B",
-            "explain": "school có ch đọc /k/. Chair, chicken, children có ch đọc /tʃ/.",
-            "options": [
-                  [
-                        "chair",
-                        "ch"
-                  ],
-                  [
-                        "school",
-                        "ch"
-                  ],
-                  [
-                        "chicken",
-                        "ch"
-                  ],
-                  [
-                        "children",
-                        "ch"
-                  ]
-            ]
-      },
-      {
-            "type": "sound",
-            "grade": 7,
-            "rule": "ch",
-            "answer": "D",
-            "explain": "Christmas có ch đọc /k/. Chat, child, lunch có ch đọc /tʃ/.",
-            "options": [
-                  [
-                        "chat",
-                        "ch"
-                  ],
-                  [
-                        "child",
-                        "ch"
-                  ],
-                  [
-                        "lunch",
-                        "ch"
-                  ],
-                  [
-                        "Christmas",
-                        "Ch"
-                  ]
-            ]
-      },
-      {
-            "type": "sound",
-            "grade": 9,
-            "rule": "th",
-            "answer": "D",
-            "explain": "weather có th đọc /ð/. Think, thank, healthy có th đọc /θ/.",
-            "options": [
-                  [
-                        "think",
-                        "th"
-                  ],
-                  [
-                        "thank",
-                        "th"
-                  ],
-                  [
-                        "healthy",
-                        "th"
-                  ],
-                  [
-                        "weather",
-                        "th"
-                  ]
-            ]
-      },
-      {
-            "type": "sound",
-            "grade": 7,
-            "rule": "th",
-            "answer": "A",
-            "explain": "this có th đọc /ð/. Three, math, birthday có th đọc /θ/.",
-            "options": [
-                  [
-                        "this",
-                        "th"
-                  ],
-                  [
-                        "three",
-                        "th"
-                  ],
-                  [
-                        "math",
-                        "th"
-                  ],
-                  [
-                        "birthday",
-                        "th"
-                  ]
-            ]
-      },
-      {
-            "type": "sound",
-            "grade": 8,
-            "rule": "th",
-            "answer": "B",
-            "explain": "though có th đọc /ð/. Through, thin, thousand có th đọc /θ/.",
-            "options": [
-                  [
-                        "through",
-                        "th"
-                  ],
-                  [
-                        "though",
-                        "th"
-                  ],
-                  [
-                        "thin",
-                        "th"
-                  ],
-                  [
-                        "thousand",
-                        "th"
-                  ]
-            ]
-      },
-      {
-            "type": "sound",
-            "grade": 9,
-            "rule": "th",
-            "answer": "C",
-            "explain": "breathe có th đọc /ð/. Breath, think, healthy có th đọc /θ/.",
-            "options": [
-                  [
-                        "breath",
-                        "th"
-                  ],
-                  [
-                        "think",
-                        "th"
-                  ],
-                  [
-                        "breathe",
-                        "th"
-                  ],
-                  [
-                        "healthy",
-                        "th"
-                  ]
-            ]
-      },
-      {
-            "type": "sound",
-            "grade": 7,
-            "rule": "ea",
-            "answer": "B",
-            "explain": "great có ea đọc /eɪ/. Teacher, clean, sea có ea đọc /iː/.",
-            "options": [
-                  [
-                        "teacher",
-                        "ea"
-                  ],
-                  [
-                        "great",
-                        "ea"
-                  ],
-                  [
-                        "clean",
-                        "ea"
-                  ],
-                  [
-                        "sea",
-                        "ea"
-                  ]
-            ]
-      },
-      {
-            "type": "sound",
-            "grade": 8,
-            "rule": "ea",
-            "answer": "C",
-            "explain": "head có ea đọc /e/. Speak, teacher, clean có ea đọc /iː/.",
-            "options": [
-                  [
-                        "speak",
-                        "ea"
-                  ],
-                  [
-                        "teacher",
-                        "ea"
-                  ],
-                  [
-                        "head",
-                        "ea"
-                  ],
-                  [
-                        "clean",
-                        "ea"
-                  ]
-            ]
-      },
-      {
-            "type": "sound",
-            "grade": 9,
-            "rule": "ea",
-            "answer": "A",
-            "explain": "break có ea đọc /eɪ/. Bread, head, health có ea đọc /e/.",
-            "options": [
-                  [
-                        "break",
-                        "ea"
-                  ],
-                  [
-                        "bread",
-                        "ea"
-                  ],
-                  [
-                        "head",
-                        "ea"
-                  ],
-                  [
-                        "health",
-                        "ea"
-                  ]
-            ]
-      },
-      {
-            "type": "sound",
-            "grade": 8,
-            "rule": "oo",
-            "answer": "C",
-            "explain": "blood có oo đọc /ʌ/. School, food, moon có oo đọc /uː/.",
-            "options": [
-                  [
-                        "school",
-                        "oo"
-                  ],
-                  [
-                        "food",
-                        "oo"
-                  ],
-                  [
-                        "blood",
-                        "oo"
-                  ],
-                  [
-                        "moon",
-                        "oo"
-                  ]
-            ]
-      },
-      {
-            "type": "sound",
-            "grade": 7,
-            "rule": "oo",
-            "answer": "A",
-            "explain": "book có oo đọc /ʊ/. Food, school, room có oo đọc /uː/.",
-            "options": [
-                  [
-                        "book",
-                        "oo"
-                  ],
-                  [
-                        "food",
-                        "oo"
-                  ],
-                  [
-                        "school",
-                        "oo"
-                  ],
-                  [
-                        "room",
-                        "oo"
-                  ]
-            ]
-      },
-      {
-            "type": "sound",
-            "grade": 9,
-            "rule": "oo",
-            "answer": "D",
-            "explain": "good có oo đọc /ʊ/. Moon, food, blue có âm /uː/.",
-            "options": [
-                  [
-                        "moon",
-                        "oo"
-                  ],
-                  [
-                        "food",
-                        "oo"
-                  ],
-                  [
-                        "blue",
-                        "ue"
-                  ],
-                  [
-                        "good",
-                        "oo"
-                  ]
-            ]
-      },
-      {
-            "type": "sound",
-            "grade": 9,
-            "rule": "ou",
-            "answer": "A",
-            "explain": "country có ou đọc /ʌ/. Sound, about, house có ou đọc /aʊ/.",
-            "options": [
-                  [
-                        "country",
-                        "ou"
-                  ],
-                  [
-                        "sound",
-                        "ou"
-                  ],
-                  [
-                        "about",
-                        "ou"
-                  ],
-                  [
-                        "house",
-                        "ou"
-                  ]
-            ]
-      },
-      {
-            "type": "sound",
-            "grade": 8,
-            "rule": "ou",
-            "answer": "C",
-            "explain": "young có ou đọc /ʌ/. Cloud, shout, mountain có ou đọc /aʊ/.",
-            "options": [
-                  [
-                        "cloud",
-                        "ou"
-                  ],
-                  [
-                        "shout",
-                        "ou"
-                  ],
-                  [
-                        "young",
-                        "ou"
-                  ],
-                  [
-                        "mountain",
-                        "ou"
-                  ]
-            ]
-      },
-      {
-            "type": "sound",
-            "grade": 7,
-            "rule": "ow",
-            "answer": "B",
-            "explain": "know có ow đọc /əʊ/. Now, how, brown có ow đọc /aʊ/.",
-            "options": [
-                  [
-                        "now",
-                        "ow"
-                  ],
-                  [
-                        "know",
-                        "ow"
-                  ],
-                  [
-                        "how",
-                        "ow"
-                  ],
-                  [
-                        "brown",
-                        "ow"
-                  ]
-            ]
-      },
-      {
-            "type": "sound",
-            "grade": 8,
-            "rule": "ow",
-            "answer": "D",
-            "explain": "show có ow đọc /əʊ/. Cow, flower, town có ow đọc /aʊ/.",
-            "options": [
-                  [
-                        "cow",
-                        "ow"
-                  ],
-                  [
-                        "flower",
-                        "ow"
-                  ],
-                  [
-                        "town",
-                        "ow"
-                  ],
-                  [
-                        "show",
-                        "ow"
-                  ]
-            ]
-      },
-      {
-            "type": "sound",
-            "grade": 7,
-            "rule": "a",
-            "answer": "C",
-            "explain": "father có a đọc /ɑː/. Cat, apple, activity có a thường gần /æ/.",
-            "options": [
-                  [
-                        "cat",
-                        "a"
-                  ],
-                  [
-                        "apple",
-                        "a"
-                  ],
-                  [
-                        "father",
-                        "a"
-                  ],
-                  [
-                        "activity",
-                        "a"
-                  ]
-            ]
-      },
-      {
-            "type": "sound",
-            "grade": 8,
-            "rule": "a",
-            "answer": "A",
-            "explain": "many có a đọc /e/. Bag, cat, hat có a đọc /æ/.",
-            "options": [
-                  [
-                        "many",
-                        "a"
-                  ],
-                  [
-                        "bag",
-                        "a"
-                  ],
-                  [
-                        "cat",
-                        "a"
-                  ],
-                  [
-                        "hat",
-                        "a"
-                  ]
-            ]
-      },
-      {
-            "type": "sound",
-            "grade": 9,
-            "rule": "a",
-            "answer": "B",
-            "explain": "water có a đọc /ɔː/. Apple, bag, cat có a đọc /æ/.",
-            "options": [
-                  [
-                        "apple",
-                        "a"
-                  ],
-                  [
-                        "water",
-                        "a"
-                  ],
-                  [
-                        "bag",
-                        "a"
-                  ],
-                  [
-                        "cat",
-                        "a"
-                  ]
-            ]
-      },
-      {
-            "type": "sound",
-            "grade": 7,
-            "rule": "a",
-            "answer": "D",
-            "explain": "class có a đọc /ɑː/ trong giọng Anh - Anh. Apple, cat, hat có a đọc /æ/.",
-            "options": [
-                  [
-                        "apple",
-                        "a"
-                  ],
-                  [
-                        "cat",
-                        "a"
-                  ],
-                  [
-                        "hat",
-                        "a"
-                  ],
-                  [
-                        "class",
-                        "a"
-                  ]
-            ]
-      },
-      {
-            "type": "sound",
-            "grade": 8,
-            "rule": "i",
-            "answer": "D",
-            "explain": "machine có i đọc /iː/. Village, activity, difficult có i thường đọc /ɪ/.",
-            "options": [
-                  [
-                        "village",
-                        "i"
-                  ],
-                  [
-                        "activity",
-                        "i"
-                  ],
-                  [
-                        "difficult",
-                        "i"
-                  ],
-                  [
-                        "machine",
-                        "i"
-                  ]
-            ]
-      },
-      {
-            "type": "sound",
-            "grade": 7,
-            "rule": "i",
-            "answer": "A",
-            "explain": "find có i đọc /aɪ/. Sit, film, milk có i đọc /ɪ/.",
-            "options": [
-                  [
-                        "find",
-                        "i"
-                  ],
-                  [
-                        "sit",
-                        "i"
-                  ],
-                  [
-                        "film",
-                        "i"
-                  ],
-                  [
-                        "milk",
-                        "i"
-                  ]
-            ]
-      },
-      {
-            "type": "sound",
-            "grade": 8,
-            "rule": "i",
-            "answer": "B",
-            "explain": "child có i đọc /aɪ/. City, visit, picture có i đọc /ɪ/.",
-            "options": [
-                  [
-                        "city",
-                        "i"
-                  ],
-                  [
-                        "child",
-                        "i"
-                  ],
-                  [
-                        "visit",
-                        "i"
-                  ],
-                  [
-                        "picture",
-                        "i"
-                  ]
-            ]
-      },
-      {
-            "type": "sound",
-            "grade": 9,
-            "rule": "i",
-            "answer": "A",
-            "explain": "live trong nghĩa 'sống' đọc /lɪv/. Five, time, white có i đọc /aɪ/.",
-            "options": [
-                  [
-                        "live",
-                        "i"
-                  ],
-                  [
-                        "five",
-                        "i"
-                  ],
-                  [
-                        "time",
-                        "i"
-                  ],
-                  [
-                        "white",
-                        "i"
-                  ]
-            ]
-      },
-      {
-            "type": "sound",
-            "grade": 9,
-            "rule": "u",
-            "answer": "B",
-            "explain": "student có u đọc /juː/. Suburb, custom, adult thường có u đọc /ʌ/ hoặc âm khác không phải /juː/.",
-            "options": [
-                  [
-                        "suburb",
-                        "u"
-                  ],
-                  [
-                        "student",
-                        "u"
-                  ],
-                  [
-                        "custom",
-                        "u"
-                  ],
-                  [
-                        "adult",
-                        "u"
-                  ]
-            ]
-      },
-      {
-            "type": "sound",
-            "grade": 8,
-            "rule": "u",
-            "answer": "A",
-            "explain": "put có u đọc /ʊ/. Cup, sun, bus có u đọc /ʌ/.",
-            "options": [
-                  [
-                        "put",
-                        "u"
-                  ],
-                  [
-                        "cup",
-                        "u"
-                  ],
-                  [
-                        "sun",
-                        "u"
-                  ],
-                  [
-                        "bus",
-                        "u"
-                  ]
-            ]
-      },
-      {
-            "type": "sound",
-            "grade": 7,
-            "rule": "u",
-            "answer": "C",
-            "explain": "music có u đọc /juː/. Lunch, summer, study có u đọc /ʌ/.",
-            "options": [
-                  [
-                        "lunch",
-                        "u"
-                  ],
-                  [
-                        "summer",
-                        "u"
-                  ],
-                  [
-                        "music",
-                        "u"
-                  ],
-                  [
-                        "study",
-                        "u"
-                  ]
-            ]
-      },
-      {
-            "type": "sound",
-            "grade": 9,
-            "rule": "u",
-            "answer": "D",
-            "explain": "sugar có u đọc /ʊ/. Sun, cup, luck có u đọc /ʌ/.",
-            "options": [
-                  [
-                        "sun",
-                        "u"
-                  ],
-                  [
-                        "cup",
-                        "u"
-                  ],
-                  [
-                        "luck",
-                        "u"
-                  ],
-                  [
-                        "sugar",
-                        "u"
-                  ]
-            ]
-      },
-      {
-            "type": "sound",
-            "grade": 9,
-            "rule": "silent letters",
-            "answer": "A",
-            "explain": "hour có h câm. House, hobby, healthy có h được phát âm.",
-            "options": [
-                  [
-                        "hour",
-                        "h"
-                  ],
-                  [
-                        "house",
-                        "h"
-                  ],
-                  [
-                        "hobby",
-                        "h"
-                  ],
-                  [
-                        "healthy",
-                        "h"
-                  ]
-            ]
-      },
-      {
-            "type": "sound",
-            "grade": 7,
-            "rule": "silent letters",
-            "answer": "C",
-            "explain": "answer có w câm. Water, window, white có w được phát âm.",
-            "options": [
-                  [
-                        "water",
-                        "w"
-                  ],
-                  [
-                        "window",
-                        "w"
-                  ],
-                  [
-                        "answer",
-                        "w"
-                  ],
-                  [
-                        "white",
-                        "w"
-                  ]
-            ]
-      },
-      {
-            "type": "sound",
-            "grade": 8,
-            "rule": "c",
-            "answer": "D",
-            "explain": "city có c đọc /s/. Community, custom, collect có c đọc /k/.",
-            "options": [
-                  [
-                        "community",
-                        "c"
-                  ],
-                  [
-                        "custom",
-                        "c"
-                  ],
-                  [
-                        "collect",
-                        "c"
-                  ],
-                  [
-                        "city",
-                        "c"
-                  ]
-            ]
-      },
-      {
-            "type": "sound",
-            "grade": 8,
-            "rule": "gh",
-            "answer": "B",
-            "explain": "laugh có gh đọc /f/. High, although, through có gh câm.",
-            "options": [
-                  [
-                        "high",
-                        "gh"
-                  ],
-                  [
-                        "laugh",
-                        "gh"
-                  ],
-                  [
-                        "although",
-                        "gh"
-                  ],
-                  [
-                        "through",
-                        "gh"
-                  ]
-            ]
-      },
-      {
-            "type": "stress",
-            "grade": 7,
-            "answer": "D",
-            "explain": "volunteer nhấn âm cuối: volunˈteer. Hobby, service, healthy thường nhấn âm 1.",
-            "options": [
-                  "hobby",
-                  "service",
-                  "healthy",
-                  "volunteer"
-            ],
-            "stress": [
-                  "ˈhobby",
-                  "ˈservice",
-                  "ˈhealthy",
-                  "volunˈteer"
-            ]
-      },
-      {
-            "type": "stress",
-            "grade": 7,
-            "answer": "C",
-            "explain": "collect là động từ 2 âm tiết, thường nhấn âm 2. Model, music, artist thường nhấn âm 1.",
-            "options": [
-                  "model",
-                  "music",
-                  "collect",
-                  "artist"
-            ],
-            "stress": [
-                  "ˈmodel",
-                  "ˈmusic",
-                  "colˈlect",
-                  "ˈartist"
-            ]
-      },
-      {
-            "type": "stress",
-            "grade": 7,
-            "answer": "B",
-            "explain": "delicious nhấn âm 2. Festival, vegetable, character thường nhấn âm 1.",
-            "options": [
-                  "festival",
-                  "delicious",
-                  "vegetable",
-                  "character"
-            ],
-            "stress": [
-                  "ˈfestival",
-                  "deˈlicious",
-                  "ˈvegetable",
-                  "ˈcharacter"
-            ]
-      },
-      {
-            "type": "stress",
-            "grade": 7,
-            "answer": "D",
-            "explain": "perform là động từ 2 âm tiết, nhấn âm 2. Music, concert, painting thường nhấn âm 1 trong danh từ.",
-            "options": [
-                  "music",
-                  "concert",
-                  "painting",
-                  "perform"
-            ],
-            "stress": [
-                  "ˈmusic",
-                  "ˈconcert",
-                  "ˈpainting",
-                  "perˈform"
-            ]
-      },
-      {
-            "type": "stress",
-            "grade": 7,
-            "answer": "D",
-            "explain": "provide là động từ 2 âm tiết, nhấn âm 2. Breakfast, bottle, sugar thường nhấn âm 1.",
-            "options": [
-                  "breakfast",
-                  "bottle",
-                  "sugar",
-                  "provide"
-            ],
-            "stress": [
-                  "ˈbreakfast",
-                  "ˈbottle",
-                  "ˈsugar",
-                  "proˈvide"
-            ]
-      },
-      {
-            "type": "stress",
-            "grade": 7,
-            "answer": "A",
-            "explain": "donate nhấn âm 2. Artist, actor, painting thường nhấn âm 1.",
-            "options": [
-                  "donate",
-                  "artist",
-                  "actor",
-                  "painting"
-            ],
-            "stress": [
-                  "doˈnate",
-                  "ˈartist",
-                  "ˈactor",
-                  "ˈpainting"
-            ]
-      },
-      {
-            "type": "stress",
-            "grade": 7,
-            "answer": "D",
-            "explain": "traditional nhấn âm 2. Vegetable, calorie, energy thường nhấn âm 1.",
-            "options": [
-                  "vegetable",
-                  "calorie",
-                  "energy",
-                  "traditional"
-            ],
-            "stress": [
-                  "ˈvegetable",
-                  "ˈcalorie",
-                  "ˈenergy",
-                  "traˈditional"
-            ]
-      },
-      {
-            "type": "stress",
-            "grade": 7,
-            "answer": "A",
-            "explain": "musician nhấn âm 2. Actor, artist, painting thường nhấn âm 1.",
-            "options": [
-                  "musician",
-                  "actor",
-                  "artist",
-                  "painting"
-            ],
-            "stress": [
-                  "muˈsician",
-                  "ˈactor",
-                  "ˈartist",
-                  "ˈpainting"
-            ]
-      },
-      {
-            "type": "stress",
-            "grade": 7,
-            "answer": "C",
-            "explain": "enjoy là động từ 2 âm tiết, nhấn âm 2. Lesson, hobby, music thường nhấn âm 1.",
-            "options": [
-                  "lesson",
-                  "hobby",
-                  "enjoy",
-                  "music"
-            ],
-            "stress": [
-                  "ˈlesson",
-                  "ˈhobby",
-                  "enˈjoy",
-                  "ˈmusic"
-            ]
-      },
-      {
-            "type": "stress",
-            "grade": 7,
-            "answer": "B",
-            "explain": "arrive nhấn âm 2. City, country, village thường nhấn âm 1.",
-            "options": [
-                  "city",
-                  "arrive",
-                  "country",
-                  "village"
-            ],
-            "stress": [
-                  "ˈcity",
-                  "aˈrrive",
-                  "ˈcountry",
-                  "ˈvillage"
-            ]
-      },
-      {
-            "type": "stress",
-            "grade": 8,
-            "answer": "A",
-            "explain": "communicate nhấn âm 2. Comfortable, teenager, natural thường nhấn âm 1.",
-            "options": [
-                  "communicate",
-                  "comfortable",
-                  "teenager",
-                  "natural"
-            ],
-            "stress": [
-                  "comˈmunicate",
-                  "ˈcomfortable",
-                  "ˈteenager",
-                  "ˈnatural"
-            ]
-      },
-      {
-            "type": "stress",
-            "grade": 8,
-            "answer": "D",
-            "explain": "tradition nhấn âm 2 trước hậu tố -tion. Leisure, custom, village nhấn âm 1.",
-            "options": [
-                  "leisure",
-                  "custom",
-                  "village",
-                  "tradition"
-            ],
-            "stress": [
-                  "ˈleisure",
-                  "ˈcustom",
-                  "ˈvillage",
-                  "traˈdition"
-            ]
-      },
-      {
-            "type": "stress",
-            "grade": 8,
-            "answer": "B",
-            "explain": "technology thường nhấn âm 2. Festival, natural, comfortable thường nhấn âm 1.",
-            "options": [
-                  "festival",
-                  "technology",
-                  "natural",
-                  "comfortable"
-            ],
-            "stress": [
-                  "ˈfestival",
-                  "techˈnology",
-                  "ˈnatural",
-                  "ˈcomfortable"
-            ]
-      },
-      {
-            "type": "stress",
-            "grade": 8,
-            "answer": "B",
-            "explain": "disaster nhấn âm 2. Natural, festival, comfortable thường nhấn âm 1.",
-            "options": [
-                  "natural",
-                  "disaster",
-                  "festival",
-                  "comfortable"
-            ],
-            "stress": [
-                  "ˈnatural",
-                  "diˈsaster",
-                  "ˈfestival",
-                  "ˈcomfortable"
-            ]
-      },
-      {
-            "type": "stress",
-            "grade": 8,
-            "answer": "C",
-            "explain": "automatic nhấn âm 3 trước hậu tố -ic. Appliance, invention, pollution thường nhấn âm 2.",
-            "options": [
-                  "appliance",
-                  "invention",
-                  "automatic",
-                  "pollution"
-            ],
-            "stress": [
-                  "apˈpliance",
-                  "inˈvention",
-                  "autoˈmatic",
-                  "polˈlution"
-            ]
-      },
-      {
-            "type": "stress",
-            "grade": 8,
-            "answer": "A",
-            "explain": "emergency nhấn âm 2. Rescue, victim, damage thường nhấn âm 1.",
-            "options": [
-                  "emergency",
-                  "rescue",
-                  "victim",
-                  "damage"
-            ],
-            "stress": [
-                  "eˈmergency",
-                  "ˈrescue",
-                  "ˈvictim",
-                  "ˈdamage"
-            ]
-      },
-      {
-            "type": "stress",
-            "grade": 8,
-            "answer": "A",
-            "explain": "pollution nhấn âm 2. Natural, village, custom thường nhấn âm 1.",
-            "options": [
-                  "pollution",
-                  "natural",
-                  "village",
-                  "custom"
-            ],
-            "stress": [
-                  "polˈlution",
-                  "ˈnatural",
-                  "ˈvillage",
-                  "ˈcustom"
-            ]
-      },
-      {
-            "type": "stress",
-            "grade": 8,
-            "answer": "A",
-            "explain": "invention nhấn âm 2. Festival, leisure, custom thường nhấn âm 1.",
-            "options": [
-                  "invention",
-                  "festival",
-                  "leisure",
-                  "custom"
-            ],
-            "stress": [
-                  "inˈvention",
-                  "ˈfestival",
-                  "ˈleisure",
-                  "ˈcustom"
-            ]
-      },
-      {
-            "type": "stress",
-            "grade": 8,
-            "answer": "A",
-            "explain": "appliance nhấn âm 2. Teenager, pressure, village thường nhấn âm 1.",
-            "options": [
-                  "appliance",
-                  "teenager",
-                  "pressure",
-                  "village"
-            ],
-            "stress": [
-                  "apˈpliance",
-                  "ˈteenager",
-                  "ˈpressure",
-                  "ˈvillage"
-            ]
-      },
-      {
-            "type": "stress",
-            "grade": 8,
-            "answer": "A",
-            "explain": "environment nhấn âm 2. Comfortable, natural, festival thường nhấn âm 1.",
-            "options": [
-                  "environment",
-                  "comfortable",
-                  "natural",
-                  "festival"
-            ],
-            "stress": [
-                  "enˈvironment",
-                  "ˈcomfortable",
-                  "ˈnatural",
-                  "ˈfestival"
-            ]
-      },
-      {
-            "type": "stress",
-            "grade": 8,
-            "answer": "A",
-            "explain": "activity nhấn âm 2. Village, leisure, custom thường nhấn âm 1.",
-            "options": [
-                  "activity",
-                  "village",
-                  "leisure",
-                  "custom"
-            ],
-            "stress": [
-                  "acˈtivity",
-                  "ˈvillage",
-                  "ˈleisure",
-                  "ˈcustom"
-            ]
-      },
-      {
-            "type": "stress",
-            "grade": 8,
-            "answer": "A",
-            "explain": "decision nhấn âm 2. Teenager, comfortable, village thường nhấn âm 1.",
-            "options": [
-                  "decision",
-                  "teenager",
-                  "comfortable",
-                  "village"
-            ],
-            "stress": [
-                  "deˈcision",
-                  "ˈteenager",
-                  "ˈcomfortable",
-                  "ˈvillage"
-            ]
-      },
-      {
-            "type": "stress",
-            "grade": 8,
-            "answer": "A",
-            "explain": "develop nhấn âm 2. Damage, rescue, victim thường nhấn âm 1.",
-            "options": [
-                  "develop",
-                  "damage",
-                  "rescue",
-                  "victim"
-            ],
-            "stress": [
-                  "deˈvelop",
-                  "ˈdamage",
-                  "ˈrescue",
-                  "ˈvictim"
-            ]
-      },
-      {
-            "type": "stress",
-            "grade": 8,
-            "answer": "A",
-            "explain": "computer nhấn âm 2. Festival, natural, village thường nhấn âm 1.",
-            "options": [
-                  "computer",
-                  "festival",
-                  "natural",
-                  "village"
-            ],
-            "stress": [
-                  "comˈputer",
-                  "ˈfestival",
-                  "ˈnatural",
-                  "ˈvillage"
-            ]
-      },
-      {
-            "type": "stress",
-            "grade": 8,
-            "answer": "A",
-            "explain": "modern nhấn âm 1. Appliance, invention, pollution thường nhấn âm 2.",
-            "options": [
-                  "modern",
-                  "appliance",
-                  "invention",
-                  "pollution"
-            ],
-            "stress": [
-                  "ˈmodern",
-                  "apˈpliance",
-                  "inˈvention",
-                  "polˈlution"
-            ]
-      },
-      {
-            "type": "stress",
-            "grade": 9,
-            "answer": "D",
-            "explain": "preserve là động từ 2 âm tiết, nhấn âm 2. Artisan, heritage, village thường nhấn âm 1.",
-            "options": [
-                  "artisan",
-                  "heritage",
-                  "village",
-                  "preserve"
-            ],
-            "stress": [
-                  "ˈartisan",
-                  "ˈheritage",
-                  "ˈvillage",
-                  "preˈserve"
-            ]
-      },
-      {
-            "type": "stress",
-            "grade": 9,
-            "answer": "D",
-            "explain": "comfortable thường nhấn âm 1. Affordable, reliable, bilingual thường nhấn âm 2.",
-            "options": [
-                  "affordable",
-                  "reliable",
-                  "bilingual",
-                  "comfortable"
-            ],
-            "stress": [
-                  "aˈffordable",
-                  "reˈliable",
-                  "biˈlingual",
-                  "ˈcomfortable"
-            ]
-      },
-      {
-            "type": "stress",
-            "grade": 9,
-            "answer": "C",
-            "explain": "destination nhấn âm 3 trước -tion. Confident, cognitive, graduate thường nhấn âm 1.",
-            "options": [
-                  "confident",
-                  "cognitive",
-                  "destination",
-                  "graduate"
-            ],
-            "stress": [
-                  "ˈconfident",
-                  "ˈcognitive",
-                  "destiˈnation",
-                  "ˈgraduate"
-            ]
-      },
-      {
-            "type": "stress",
-            "grade": 9,
-            "answer": "B",
-            "explain": "opportunity nhấn âm 3. Challenge, teenager, pressure nhấn âm 1.",
-            "options": [
-                  "challenge",
-                  "opportunity",
-                  "teenager",
-                  "pressure"
-            ],
-            "stress": [
-                  "ˈchallenge",
-                  "opporˈtunity",
-                  "ˈteenager",
-                  "ˈpressure"
-            ]
-      },
-      {
-            "type": "stress",
-            "grade": 9,
-            "answer": "D",
-            "explain": "academic nhấn âm 3 trước hậu tố -ic. Confident, cognitive, graduate thường nhấn âm 1.",
-            "options": [
-                  "confident",
-                  "cognitive",
-                  "graduate",
-                  "academic"
-            ],
-            "stress": [
-                  "ˈconfident",
-                  "ˈcognitive",
-                  "ˈgraduate",
-                  "acaˈdemic"
-            ]
-      },
-      {
-            "type": "stress",
-            "grade": 9,
-            "answer": "D",
-            "explain": "responsibility nhấn gần cuối theo hậu tố -ity. Challenge, pressure, teenager thường nhấn âm 1.",
-            "options": [
-                  "challenge",
-                  "pressure",
-                  "teenager",
-                  "responsibility"
-            ],
-            "stress": [
-                  "ˈchallenge",
-                  "ˈpressure",
-                  "ˈteenager",
-                  "responsiˈbility"
-            ]
-      },
-      {
-            "type": "stress",
-            "grade": 9,
-            "answer": "B",
-            "explain": "experience nhấn âm 2. Heritage, artisan, confident thường nhấn âm 1.",
-            "options": [
-                  "heritage",
-                  "experience",
-                  "artisan",
-                  "confident"
-            ],
-            "stress": [
-                  "ˈheritage",
-                  "exˈperience",
-                  "ˈartisan",
-                  "ˈconfident"
-            ]
-      },
-      {
-            "type": "stress",
-            "grade": 9,
-            "answer": "A",
-            "explain": "facility nhấn âm 2. Heritage, village, pressure thường nhấn âm 1.",
-            "options": [
-                  "facility",
-                  "heritage",
-                  "village",
-                  "pressure"
-            ],
-            "stress": [
-                  "faˈcility",
-                  "ˈheritage",
-                  "ˈvillage",
-                  "ˈpressure"
-            ]
-      },
-      {
-            "type": "stress",
-            "grade": 9,
-            "answer": "A",
-            "explain": "community nhấn âm 2. Village, heritage, suburb thường nhấn âm 1.",
-            "options": [
-                  "community",
-                  "village",
-                  "heritage",
-                  "suburb"
-            ],
-            "stress": [
-                  "comˈmunity",
-                  "ˈvillage",
-                  "ˈheritage",
-                  "ˈsuburb"
-            ]
-      },
-      {
-            "type": "stress",
-            "grade": 9,
-            "answer": "A",
-            "explain": "metropolitan nhấn âm 3. Reliable, affordable, bilingual thường nhấn âm 2.",
-            "options": [
-                  "metropolitan",
-                  "reliable",
-                  "affordable",
-                  "bilingual"
-            ],
-            "stress": [
-                  "metroˈpolitan",
-                  "reˈliable",
-                  "aˈffordable",
-                  "biˈlingual"
-            ]
-      },
-      {
-            "type": "stress",
-            "grade": 9,
-            "answer": "A",
-            "explain": "skyscraper nhấn âm 1. Facility, reliable, bilingual thường nhấn âm 2.",
-            "options": [
-                  "skyscraper",
-                  "facility",
-                  "reliable",
-                  "bilingual"
-            ],
-            "stress": [
-                  "ˈskyscraper",
-                  "faˈcility",
-                  "reˈliable",
-                  "biˈlingual"
-            ]
-      },
-      {
-            "type": "stress",
-            "grade": 9,
-            "answer": "A",
-            "explain": "independent nhấn âm 3. Confident, cognitive, graduate thường nhấn âm 1.",
-            "options": [
-                  "independent",
-                  "confident",
-                  "cognitive",
-                  "graduate"
-            ],
-            "stress": [
-                  "indeˈpendent",
-                  "ˈconfident",
-                  "ˈcognitive",
-                  "ˈgraduate"
-            ]
-      },
-      {
-            "type": "stress",
-            "grade": 9,
-            "answer": "A",
-            "explain": "assignment nhấn âm 2. Pressure, teenager, challenge thường nhấn âm 1.",
-            "options": [
-                  "assignment",
-                  "pressure",
-                  "teenager",
-                  "challenge"
-            ],
-            "stress": [
-                  "aˈssignment",
-                  "ˈpressure",
-                  "ˈteenager",
-                  "ˈchallenge"
-            ]
-      },
-      {
-            "type": "stress",
-            "grade": 9,
-            "answer": "A",
-            "explain": "profession nhấn âm 2. Challenge, pressure, teenager thường nhấn âm 1.",
-            "options": [
-                  "profession",
-                  "challenge",
-                  "pressure",
-                  "teenager"
-            ],
-            "stress": [
-                  "proˈfession",
-                  "ˈchallenge",
-                  "ˈpressure",
-                  "ˈteenager"
-            ]
-      },
-      {
-            "type": "stress",
-            "grade": 9,
-            "answer": "A",
-            "explain": "career nhấn âm 2. Challenge, pressure, graduate thường nhấn âm 1.",
-            "options": [
-                  "career",
-                  "challenge",
-                  "pressure",
-                  "graduate"
-            ],
-            "stress": [
-                  "caˈreer",
-                  "ˈchallenge",
-                  "ˈpressure",
-                  "ˈgraduate"
-            ]
-      },
-      {
-            "type": "stress",
-            "grade": 8,
-            "answer": "D",
-            "explain": "festival nhấn âm 1. Pollution, invention, tradition đều nhấn âm 2.",
-            "options": [
-                  "pollution",
-                  "invention",
-                  "tradition",
-                  "festival"
-            ],
-            "stress": [
-                  "polˈlution",
-                  "inˈvention",
-                  "traˈdition",
-                  "ˈfestival"
-            ]
-      },
-      {
-            "type": "stress",
-            "grade": 8,
-            "answer": "D",
-            "explain": "appliance nhấn âm 2. Comfortable, natural, festival thường nhấn âm 1.",
-            "options": [
-                  "comfortable",
-                  "natural",
-                  "festival",
-                  "appliance"
-            ],
-            "stress": [
-                  "ˈcomfortable",
-                  "ˈnatural",
-                  "ˈfestival",
-                  "apˈpliance"
-            ]
-      },
-      {
-            "type": "stress",
-            "grade": 7,
-            "answer": "D",
-            "explain": "enjoy là động từ 2 âm tiết, nhấn âm 2. Teacher, student, homework thường nhấn âm 1.",
-            "options": [
-                  "teacher",
-                  "student",
-                  "homework",
-                  "enjoy"
-            ],
-            "stress": [
-                  "ˈteacher",
-                  "ˈstudent",
-                  "ˈhomework",
-                  "enˈjoy"
-            ]
-      },
-      {
-            "type": "stress",
-            "grade": 7,
-            "answer": "D",
-            "explain": "hobby nhấn âm 1. Cartoon, invite, agree thường nhấn âm 2.",
-            "options": [
-                  "cartoon",
-                  "invite",
-                  "agree",
-                  "hobby"
-            ],
-            "stress": [
-                  "carˈtoon",
-                  "inˈvite",
-                  "aˈgree",
-                  "ˈhobby"
-            ]
-      },
-      {
-            "type": "stress",
-            "grade": 9,
-            "answer": "D",
-            "explain": "heritage nhấn âm 1. Protect, prevent, preserve là động từ 2 âm tiết, nhấn âm 2.",
-            "options": [
-                  "protect",
-                  "prevent",
-                  "preserve",
-                  "heritage"
-            ],
-            "stress": [
-                  "proˈtect",
-                  "preˈvent",
-                  "preˈserve",
-                  "ˈheritage"
-            ]
-      },
-      {
-            "type": "stress",
-            "grade": 8,
-            "answer": "D",
-            "explain": "suppose nhấn âm 2. Famous, village, custom thường nhấn âm 1.",
-            "options": [
-                  "famous",
-                  "village",
-                  "custom",
-                  "suppose"
-            ],
-            "stress": [
-                  "ˈfamous",
-                  "ˈvillage",
-                  "ˈcustom",
-                  "suˈppose"
-            ]
-      },
-      {
-            "type": "stress",
-            "grade": 7,
-            "answer": "D",
-            "explain": "artist nhấn âm 1. Improve, provide, collect đều là động từ 2 âm tiết, nhấn âm 2.",
-            "options": [
-                  "improve",
-                  "provide",
-                  "collect",
-                  "artist"
-            ],
-            "stress": [
-                  "imˈprove",
-                  "proˈvide",
-                  "colˈlect",
-                  "ˈartist"
-            ]
-      },
-      {
-            "type": "stress",
-            "grade": 7,
-            "answer": "D",
-            "explain": "decide nhấn âm 2. Window, music, lesson thường nhấn âm 1.",
-            "options": [
-                  "window",
-                  "music",
-                  "lesson",
-                  "decide"
-            ],
-            "stress": [
-                  "ˈwindow",
-                  "ˈmusic",
-                  "ˈlesson",
-                  "deˈcide"
-            ]
-      },
-      {
-            "type": "stress",
-            "grade": 9,
-            "answer": "D",
-            "explain": "village nhấn âm 1. Technology, geography, biology thường nhấn âm 2.",
-            "options": [
-                  "technology",
-                  "geography",
-                  "biology",
-                  "village"
-            ],
-            "stress": [
-                  "techˈnology",
-                  "geˈography",
-                  "biˈology",
-                  "ˈvillage"
-            ]
-      },
-      {
-            "type": "stress",
-            "grade": 9,
-            "answer": "D",
-            "explain": "engineer nhấn âm cuối. Confident, cognitive, concentrate thường nhấn âm 1.",
-            "options": [
-                  "confident",
-                  "cognitive",
-                  "concentrate",
-                  "engineer"
-            ],
-            "stress": [
-                  "ˈconfident",
-                  "ˈcognitive",
-                  "ˈconcentrate",
-                  "engiˈneer"
-            ]
-      }
-];
-
-    const state = {
-      current:null,
-      answered:false,
-      score:loadJSON('vistaIpaPronScore_v3',{correct:0,wrong:0}),
-      exam:[],
-      examAns:{},
-      submitted:false
+    const practiceBank = {
+      "iː": ["sheep", "green", "teacher", "three", "sea", "key", "meet", "sleep"],
+      "ɪ": ["ship", "sit", "fish", "milk", "window", "picture", "little", "city"],
+      "e": ["bed", "pen", "ten", "red", "head", "friend", "letter", "breakfast"],
+      "æ": ["cat", "man", "bag", "family", "apple", "happy", "black", "traffic"],
+      "ɑː": ["car", "father", "park", "class", "start", "garden", "market", "party"],
+      "ɒ": ["hot", "dog", "box", "shop", "clock", "orange", "sorry", "hospital"],
+      "ɔː": ["horse", "door", "four", "sport", "morning", "short", "talk", "water"],
+      "ʊ": ["book", "good", "look", "cook", "foot", "put", "sugar", "woman"],
+      "uː": ["food", "school", "moon", "blue", "room", "student", "June", "music"],
+      "ʌ": ["cup", "bus", "sun", "mother", "brother", "money", "study", "country"],
+      "ɜː": ["bird", "girl", "work", "world", "word", "learn", "early", "turn"],
+      "ə": ["about", "banana", "teacher", "doctor", "family", "problem", "today", "again"],
+      "eɪ": ["cake", "name", "day", "play", "great", "station", "table", "eight"],
+      "aɪ": ["bike", "time", "five", "my", "like", "white", "high", "smile"],
+      "ɔɪ": ["boy", "toy", "coin", "voice", "choice", "enjoy", "noise", "point"],
+      "aʊ": ["house", "now", "cow", "town", "brown", "flower", "shower", "about"],
+      "əʊ": ["phone", "go", "home", "open", "old", "road", "show", "window"],
+      "ɪə": ["near", "ear", "clear", "dear", "here", "idea", "year", "beer"],
+      "eə": ["hair", "chair", "pair", "where", "there", "care", "share", "parent"],
+      "ʊə": ["tour", "poor", "sure", "cure", "tourist", "during", "secure", "pure"],
+      "p": ["pen", "paper", "pencil", "happy", "open", "people", "map", "stop"],
+      "b": ["book", "bag", "baby", "table", "brother", "black", "job", "club"],
+      "t": ["tea", "teacher", "table", "city", "water", "student", "cat", "sit"],
+      "d": ["dog", "day", "door", "student", "family", "good", "red", "friend"],
+      "k": ["key", "cat", "school", "class", "book", "clock", "milk", "like"],
+      "g": ["go", "girl", "green", "garden", "again", "big", "bag", "dog"],
+      "f": ["fish", "family", "food", "phone", "photo", "coffee", "laugh", "safe"],
+      "v": ["very", "video", "visit", "village", "seven", "never", "live", "love"],
+      "θ": ["think", "three", "thank", "thin", "math", "birthday", "healthy", "month"],
+      "ð": ["this", "that", "these", "those", "mother", "father", "brother", "weather"],
+      "s": ["sun", "sit", "school", "class", "city", "lesson", "bus", "rice"],
+      "z": ["zoo", "zero", "busy", "music", "easy", "does", "boys", "cars"],
+      "ʃ": ["she", "ship", "shop", "English", "special", "sure", "station", "finish"],
+      "ʒ": ["vision", "television", "usually", "measure", "pleasure", "decision", "treasure", "garage"],
+      "h": ["hat", "house", "home", "hello", "happy", "behind", "who", "hair"],
+      "tʃ": ["chair", "teacher", "children", "watch", "kitchen", "picture", "question", "choose"],
+      "dʒ": ["jam", "job", "June", "orange", "village", "bridge", "large", "page"],
+      "m": ["man", "mother", "morning", "family", "summer", "music", "room", "time"],
+      "n": ["name", "nine", "new", "student", "morning", "green", "pen", "listen"],
+      "ŋ": ["sing", "song", "English", "morning", "young", "long", "thing", "reading"],
+      "l": ["leg", "like", "look", "school", "family", "yellow", "girl", "table"],
+      "r": ["red", "rice", "room", "right", "friend", "green", "story", "carry"],
+      "j": ["yes", "year", "young", "yellow", "student", "use", "music", "beautiful"],
+      "w": ["water", "we", "window", "white", "what", "where", "weather", "swim"]
     };
 
-    function init() {
-      document.documentElement.dataset.theme = localStorage.getItem('vistaIpaPronTheme_v3') || 'light';
-      document.getElementById('statSounds').textContent = ipaSounds.length;
-      document.getElementById('statQuestions').textContent = questions.length;
-      renderIpaChart();
-      renderTheory();
-      updateScore();
-      newQuestion();
-      createExam(false);
-      setupKeys();
+    sounds.forEach(item => {
+      item.practiceWords = practiceBank[item.symbol] || [item.word];
+    });
+
+    let activeFilter = "all";
+    let currentQuestion = null;
+
+    function showPanel(id, btn) {
+      document.querySelectorAll('.panel').forEach(panel => panel.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      document.querySelectorAll('.tab-btn').forEach(tab => tab.classList.remove('active'));
+      btn.classList.add('active');
+      if (id === 'quiz' && !currentQuestion) newQuestion();
     }
 
-    function showView(view) {
-      document.querySelectorAll('.view').forEach(x => x.classList.remove('active'));
-      document.getElementById(view + 'View').classList.add('active');
+    function setFilter(filter, btn) {
+      activeFilter = filter;
+      document.querySelectorAll('.filter-btn').forEach(button => button.classList.remove('active'));
+      btn.classList.add('active');
+      renderCards();
+    }
 
-      document.querySelectorAll('.tab').forEach(x => {
-        x.classList.toggle('active', x.dataset.view === view);
+    function renderCards() {
+      const grid = document.getElementById('ipaGrid');
+      const search = document.getElementById('searchInput').value.toLowerCase().trim();
+
+      const filtered = sounds.filter(item => {
+        const matchesFilter = activeFilter === 'all' || item.type === activeFilter;
+        const text = `${item.symbol} ${item.soundName} ${item.soundText} ${item.guide} ${item.word} ${item.ipa} ${item.meaning} ${item.label} ${item.practiceWords ? item.practiceWords.join(' ') : ''}`.toLowerCase();
+        const matchesSearch = text.includes(search);
+        return matchesFilter && matchesSearch;
       });
 
-      if (view === 'ipa') renderIpaChart();
-      if (view === 'theory') renderTheory();
-      if (view === 'practice' && !state.current) newQuestion();
-    }
-
-    function renderIpaChart() {
-      const group = document.getElementById('soundGroup').value;
-      const keyword = document.getElementById('searchInput').value.trim().toLowerCase();
-
-      const filtered = ipaSounds.filter(item => {
-        const groupOk = group === 'all' || item.group === group;
-        const text = `${item.s} ${item.name} ${item.guide} ${item.sample} ${item.ipa} ${item.meaning} ${item.words.join(' ')}`.toLowerCase();
-        const keywordOk = !keyword || text.includes(keyword);
-        return groupOk && keywordOk;
-      });
-
-      document.getElementById('ipaGrid').innerHTML = filtered.map(item => `
-        <article class="ipa-card">
-          <div class="ipa-symbol">/${escapeHtml(item.s)}/</div>
-          <h3>${escapeHtml(item.name)}</h3>
-          <div class="ipa-guide">
-            <b>Cách đọc phiên âm:</b> ${escapeHtml(item.guide)}<br>
-            <b>Từ mẫu:</b> ${escapeHtml(item.sample)} ${escapeHtml(item.ipa)} = ${escapeHtml(item.meaning)}
+      grid.innerHTML = filtered.map(item => `
+        <article class="sound-card">
+          <div class="symbol">/${item.symbol}/</div>
+          <div class="label">${item.label}</div>
+          <div class="sound-line">
+            <b>Cách đọc âm:</b> /${item.symbol}/ = ${item.soundName}<br />
+            <b>Khẩu hình:</b> ${item.guide}
           </div>
-          <div class="word-list"><b>Luyện thêm:</b> ${item.words.map(escapeHtml).join(' · ')}</div>
-          <div class="sound-actions">
-            <button class="primary" onclick="speak('${escapeJs(item.sample)}')">🔊 Nghe từ mẫu</button>
-            <button class="secondary" onclick="speak('${escapeJs(item.words.join('. '))}')">🔊 Nghe chuỗi từ</button>
+          <div class="example">
+            Từ mẫu: <b>${item.word}</b> ${item.ipa}<br />
+            Nghĩa: ${item.meaning}
+          </div>
+          <div class="practice-words">
+            <b>Từ luyện tập:</b> ${(item.practiceWords || [item.word]).join(' · ')}
+          </div>
+          <span class="tag">${typeName(item.type)}</span>
+          <div class="btn-row">
+            <button class="ipa-btn" onclick="speak('${item.soundText}', 0.6)">🔊 Nghe âm IPA</button>
+            <button class="speak-btn" onclick="speak('${item.word}', 0.78)">🔊 Nghe từ mẫu</button>
           </div>
         </article>
-      `).join('') || '<div class="empty">Không tìm thấy âm/từ phù hợp.</div>';
+      `).join('');
+
+      if (!filtered.length) {
+        grid.innerHTML = `<div class="note">Không tìm thấy âm phù hợp. Hãy thử từ khóa khác.</div>`;
+      }
     }
 
-    function renderTheory() {
-      document.getElementById('theoryGrid').innerHTML = theory.map(item => `
-        <article class="theory-card">
-          <h3>${escapeHtml(item.title)}</h3>
-          <div class="rule">${escapeHtml(item.rule)}</div>
-          <ul>${item.points.map(p => `<li>${escapeHtml(p)}</li>`).join('')}</ul>
-          <p><b>Ví dụ:</b> ${item.examples.map(escapeHtml).join(' · ')}</p>
-        </article>
+    function typeName(type) {
+      const names = {
+        monophthong: 'Nguyên âm đơn',
+        diphthong: 'Nguyên âm đôi',
+        voiceless: 'Vô thanh',
+        voiced: 'Hữu thanh'
+      };
+      return names[type] || type;
+    }
+
+    function speak(text, rate = 0.75) {
+      if (!('speechSynthesis' in window)) {
+        alert('Trình duyệt của bạn chưa hỗ trợ phát âm tự động.');
+        return;
+      }
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-US';
+      utterance.rate = rate;
+      utterance.pitch = 1;
+      window.speechSynthesis.speak(utterance);
+    }
+
+    function shuffleArray(array) {
+      return [...array].sort(() => Math.random() - 0.5);
+    }
+
+    function buildOptions(answer, type) {
+      const sameGroup = sounds
+        .filter(item => item.type === type && item.symbol !== answer)
+        .map(item => item.symbol);
+      return shuffleArray([answer, ...shuffleArray(sameGroup).slice(0, 3)]);
+    }
+
+    const quizData = sounds.flatMap(item => {
+      return (item.practiceWords || [item.word]).map(word => ({
+        word,
+        answer: item.symbol,
+        options: buildOptions(item.symbol, item.type)
+      }));
+    });
+
+    function newQuestion() {
+      currentQuestion = quizData[Math.floor(Math.random() * quizData.length)];
+      document.getElementById('quizQuestion').innerHTML = `Từ <span style="color:#f97316">${currentQuestion.word}</span> chứa âm nào?`;
+      document.getElementById('quizFeedback').textContent = '';
+      document.getElementById('quizOptions').innerHTML = currentQuestion.options.map(option => `
+        <button class="option" onclick="checkAnswer(this, '${option}')">/${option}/</button>
       `).join('');
     }
 
-    function refreshAll() {
-      renderIpaChart();
-      refreshPractice();
-    }
+    function checkAnswer(btn, selected) {
+      const allOptions = document.querySelectorAll('.option');
+      allOptions.forEach(option => option.disabled = true);
 
-    function refreshPractice() {
-      newQuestion();
-      createExam(false);
-    }
-
-    function filteredQuestions() {
-      const type = document.getElementById('questionTypeSelect').value;
-      const grade = document.getElementById('gradeSelect').value;
-      const keyword = document.getElementById('searchInput').value.trim().toLowerCase();
-
-      return questions.filter(q => {
-        const typeOk = type === 'all' || q.type === type;
-        const gradeOk = grade === 'all' || String(q.grade) === grade;
-        const text = JSON.stringify(q).toLowerCase();
-        const keywordOk = !keyword || text.includes(keyword);
-        return typeOk && gradeOk && keywordOk;
-      });
-    }
-
-    function newQuestion() {
-      const bank = filteredQuestions();
-      state.current = bank[Math.floor(Math.random() * bank.length)];
-      state.answered = false;
-      document.getElementById('answerBox').classList.remove('show');
-
-      if (!state.current) {
-        document.getElementById('questionType').textContent = 'Không có câu hỏi';
-        document.getElementById('questionText').textContent = 'Không có dữ liệu phù hợp với bộ lọc hiện tại.';
-        document.getElementById('questionPrompt').textContent = 'Hãy đổi dạng bài, khối lớp hoặc xóa từ khóa tìm kiếm.';
-        document.getElementById('optionBox').innerHTML = '';
-        return;
-      }
-
-      renderPracticeQuestion(state.current);
-    }
-
-    function renderPracticeQuestion(q) {
-      document.getElementById('questionType').textContent = q.type === 'sound'
-        ? 'Dạng 1: Chọn từ có phần gạch chân phát âm khác'
-        : 'Dạng 2: Chọn từ có trọng âm khác';
-
-      document.getElementById('questionText').innerHTML = q.type === 'sound'
-        ? 'Mark the letter A, B, C or D to indicate the word whose underlined part differs from the other three in pronunciation.'
-        : 'Mark the letter A, B, C or D to indicate the word that differs from the other three in the position of primary stress.';
-
-      document.getElementById('questionPrompt').textContent = `Từ vựng lớp ${q.grade} · ${q.rule || 'stress'}`;
-
-      const optionData = q.type === 'sound' ? q.options : q.options.map(w => [w, '']);
-      document.getElementById('optionBox').innerHTML = optionData.map((op, i) => {
-        const letter = String.fromCharCode(65 + i);
-        const label = q.type === 'sound' ? underline(op[0], op[1]) : escapeHtml(op[0]);
-        return `<button class="option" onclick="chooseAnswer('${letter}', this)">${letter}. <span class="word">${label}</span></button>`;
-      }).join('');
-    }
-
-    function underline(word, part) {
-      if (!part) return escapeHtml(word);
-      const lowerWord = word.toLowerCase();
-      const lowerPart = part.toLowerCase();
-      const index = lowerWord.indexOf(lowerPart);
-
-      if (index < 0) return escapeHtml(word);
-
-      return escapeHtml(word.slice(0, index))
-        + '<u>' + escapeHtml(word.slice(index, index + part.length)) + '</u>'
-        + escapeHtml(word.slice(index + part.length));
-    }
-
-    function chooseAnswer(letter, btn) {
-      if (state.answered || !state.current) return;
-
-      state.answered = true;
-      const isCorrect = letter === state.current.answer;
-
-      if (isCorrect) {
-        state.score.correct++;
-        toast('Chính xác!');
+      if (selected === currentQuestion.answer) {
+        btn.classList.add('correct');
+        document.getElementById('quizFeedback').innerHTML = `<span style="color:var(--green)">✅ Chính xác! ${currentQuestion.word} chứa âm /${currentQuestion.answer}/.</span>`;
       } else {
-        state.score.wrong++;
-        toast('Chưa đúng, xem giải thích nhé.');
-      }
-
-      document.querySelectorAll('#optionBox .option').forEach((button, i) => {
-        const optionLetter = String.fromCharCode(65 + i);
-        button.disabled = true;
-        if (optionLetter === state.current.answer) button.classList.add('correct');
-        if (optionLetter === letter && !isCorrect) button.classList.add('wrong');
-      });
-
-      showAnswer();
-      updateScore();
-    }
-
-    function showAnswer() {
-      const q = state.current;
-      if (!q) return;
-
-      const answerIndex = q.answer.charCodeAt(0) - 65;
-      const content = q.type === 'sound'
-        ? underline(q.options[answerIndex][0], q.options[answerIndex][1])
-        : `${escapeHtml(q.options[answerIndex])} — ${escapeHtml(q.stress[answerIndex])}`;
-
-      document.getElementById('answerBox').innerHTML = `<b>Đáp án: ${q.answer}. ${content}</b><br>${escapeHtml(q.explain)}`;
-      document.getElementById('answerBox').classList.add('show');
-    }
-
-    function updateScore() {
-      const total = state.score.correct + state.score.wrong;
-      const accuracy = total ? Math.round(state.score.correct / total * 100) : 0;
-
-      document.getElementById('correctCount').textContent = state.score.correct;
-      document.getElementById('statCorrect').textContent = state.score.correct;
-      document.getElementById('wrongCount').textContent = state.score.wrong;
-      document.getElementById('accuracyCount').textContent = accuracy + '%';
-      document.getElementById('statAccuracy').textContent = accuracy + '%';
-
-      saveJSON('vistaIpaPronScore_v3', state.score);
-    }
-
-    function resetScore() {
-      if (!confirm('Xóa điểm luyện tập?')) return;
-      state.score = { correct:0, wrong:0 };
-      updateScore();
-      toast('Đã xóa điểm.');
-    }
-
-    function createExam(show = true) {
-      state.examAns = {};
-      state.submitted = false;
-
-      const size = Number(document.getElementById('examSize').value || 20);
-      const bank = shuffle(filteredQuestions());
-      state.exam = bank.slice(0, Math.min(size, bank.length));
-
-      document.getElementById('examResult').classList.remove('show');
-
-      if (!state.exam.length) {
-        document.getElementById('examGrid').innerHTML = '<div class="empty">Không có câu hỏi phù hợp để tạo đề.</div>';
-        return;
-      }
-
-      document.getElementById('examGrid').innerHTML = state.exam.map((q, index) => {
-        const optionData = q.type === 'sound' ? q.options : q.options.map(w => [w, '']);
-        return `
-          <div class="exam-item">
-            <h3>${index + 1}. ${q.type === 'sound' ? 'Choose the word whose underlined part is pronounced differently.' : 'Choose the word with different stress pattern.'}</h3>
-            <div class="exam-options">
-              ${optionData.map((op, i) => {
-                const letter = String.fromCharCode(65 + i);
-                const label = q.type === 'sound' ? underline(op[0], op[1]) : escapeHtml(op[0]);
-                return `<button id="ex-${index}-${letter}" onclick="chooseExam(${index}, '${letter}')">${letter}. <span class="word">${label}</span></button>`;
-              }).join('')}
-            </div>
-          </div>
-        `;
-      }).join('');
-
-      if (show) toast('Đã tạo đề luyện tập.');
-    }
-
-    function chooseExam(index, letter) {
-      if (state.submitted) return;
-      state.examAns[index] = letter;
-
-      ['A','B','C','D'].forEach(l => {
-        const button = document.getElementById(`ex-${index}-${l}`);
-        if (button) button.classList.toggle('selected', l === letter);
-      });
-    }
-
-    function submitExam() {
-      if (!state.exam.length || state.submitted) return;
-
-      state.submitted = true;
-      let correct = 0;
-
-      state.exam.forEach((q, index) => {
-        if (state.examAns[index] === q.answer) correct++;
-
-        ['A','B','C','D'].forEach(letter => {
-          const button = document.getElementById(`ex-${index}-${letter}`);
-          if (!button) return;
-          button.disabled = true;
-          if (letter === q.answer) button.classList.add('correct');
-          if (state.examAns[index] === letter && letter !== q.answer) button.classList.add('wrong');
+        btn.classList.add('wrong');
+        allOptions.forEach(option => {
+          if (option.textContent.includes(`/${currentQuestion.answer}/`)) {
+            option.classList.add('correct');
+          }
         });
-      });
-
-      const percent = Math.round(correct / state.exam.length * 100);
-      document.getElementById('examResult').innerHTML = `Kết quả: ${correct}/${state.exam.length} câu đúng (${percent}%). ${percent >= 80 ? 'Rất tốt!' : 'Cần xem lại lý thuyết và luyện thêm.'}`;
-      document.getElementById('examResult').classList.add('show');
-    }
-
-    function speakCurrent() {
-      if (!state.current) return;
-      const words = state.current.type === 'sound'
-        ? state.current.options.map(x => x[0])
-        : state.current.options;
-      speak(words.join('. '));
-    }
-
-    function speak(text) {
-      if (!('speechSynthesis' in window)) {
-        alert('Trình duyệt chưa hỗ trợ đọc tự động.');
-        return;
+        document.getElementById('quizFeedback').innerHTML = `<span style="color:var(--red)">❌ Chưa đúng. Đáp án đúng là /${currentQuestion.answer}/.</span>`;
       }
-
-      speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = 'en-US';
-      utterance.rate = .82;
-      speechSynthesis.speak(utterance);
+      speak(currentQuestion.word, 0.78);
     }
 
-    function toggleTheme() {
-      const html = document.documentElement;
-      html.dataset.theme = html.dataset.theme === 'dark' ? 'light' : 'dark';
-      localStorage.setItem('vistaIpaPronTheme_v3', html.dataset.theme);
-    }
-
-    function toast(message) {
-      const element = document.getElementById('toast');
-      element.textContent = message;
-      element.classList.add('show');
-      clearTimeout(toast.timer);
-      toast.timer = setTimeout(() => element.classList.remove('show'), 2200);
-    }
-
-    function shuffle(array) {
-      return [...array].sort(() => Math.random() - .5);
-    }
-
-    function saveJSON(key, value) {
-      try {
-        localStorage.setItem(key, JSON.stringify(value));
-      } catch (error) {}
-    }
-
-    function loadJSON(key, fallback) {
-      try {
-        return JSON.parse(localStorage.getItem(key)) || fallback;
-      } catch (error) {
-        return fallback;
-      }
-    }
-
-    function escapeHtml(text) {
-      return String(text)
-        .replace(/&/g,'&amp;')
-        .replace(/</g,'&lt;')
-        .replace(/>/g,'&gt;')
-        .replace(/"/g,'&quot;')
-        .replace(/'/g,'&#039;');
-    }
-
-    function escapeJs(text) {
-      return String(text).replace(/\\/g, '\\\\').replace(/'/g, "\\'");
-    }
-
-    function setupKeys() {
-      document.addEventListener('keydown', e => {
-        const tag = document.activeElement.tagName.toLowerCase();
-        if (tag === 'input' || tag === 'select') return;
-
-        if (e.key === 'Enter') newQuestion();
-        if (e.key.toLowerCase() === 'h') showAnswer();
-
-        const number = Number(e.key);
-        if (number >= 1 && number <= 4) {
-          const button = document.querySelectorAll('#optionBox .option')[number - 1];
-          if (button) button.click();
-        }
-      });
-    }
-
-    init();
+    renderCards();
   </script>
 </body>
 </html>
